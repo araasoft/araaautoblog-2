@@ -1,0 +1,610 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2a1fa8">
+<title>AraaPosts</title>
+<link rel="icon" href="logo.png">
+<script>try{var t=localStorage.getItem("araaTheme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
+<style>
+:root{color-scheme:light dark}:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--pri2);outline-offset:2px}
+.themesel{margin:8px 0 12px}.themesel .seg button{min-height:36px;font-size:13px}.themesel .seg button[aria-pressed=true]{background:var(--card);color:var(--ink)}
+:root{--bg:#f5f6fc;--card:#fff;--ink:#14124a;--mut:#6a6f8f;--line:#e6e9f7;--pri:#2a1fa8;--pri2:#4b3df0;--pale:#eef0ff;--ok:#1e8e5a;--warn:#b7791f;--bad:#c0392b;--fb:#1877f2;--li:#0a66c2;--sh:0 4px 18px rgba(42,31,168,.07)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0e0f20;--card:#171933;--ink:#eceeff;--mut:#9aa0c8;--line:#262a4d;--pale:#20244d;--sh:none;--pri:#6b5cff;--pri2:#8576ff}}
+:root[data-theme=dark]{--bg:#0e0f20;--card:#171933;--ink:#eceeff;--mut:#9aa0c8;--line:#262a4d;--pale:#20244d;--sh:none;--pri:#6b5cff;--pri2:#8576ff}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}body{font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:env(safe-area-inset-bottom)}
+.hide{display:none!important}a{color:var(--pri);text-decoration:none}
+.ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}.ic.f{fill:currentColor;stroke:none}
+button,.btn{font:inherit;font-weight:600;border:0;border-radius:12px;padding:11px 16px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--pale);color:var(--pri);min-height:44px}
+button:disabled{opacity:.6}.pri{background:linear-gradient(135deg,var(--pri),var(--pri2));color:#fff}.dang{background:#fdecea;color:var(--bad)}.sm{padding:7px 12px;min-height:36px;font-size:14px}.full{width:100%}
+.btn.fb{background:var(--fb);color:#fff}.btn.li{background:var(--li);color:#fff}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .dang{background:#3a1c20}}
+:root[data-theme=dark] .dang{background:#3a1c20}
+input,textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:12px 14px}
+input:focus,textarea:focus,select:focus{outline:0;border-color:var(--pri2)}textarea{min-height:130px;resize:vertical}
+label.l{display:block;font-weight:600;font-size:13px;color:var(--mut);margin:14px 0 6px}
+.hint{font-size:13px;color:var(--mut);margin-top:6px}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.sp{justify-content:space-between}
+/* layout */
+.top{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:8px 12px;padding-top:calc(8px + env(safe-area-inset-top))}
+.top h1{font-size:18px;margin:0;flex:1}.top button{background:none;padding:8px;min-height:40px;color:var(--ink)}
+.av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--pri),var(--pri2));color:#fff;display:grid;place-items:center;font-weight:700;flex:none;overflow:hidden}.av img{width:100%;height:100%;object-fit:cover}.av.lg{width:72px;height:72px;font-size:28px}
+#drawer{position:fixed;inset:0 auto 0 0;width:285px;max-width:84vw;background:var(--card);z-index:40;transform:translateX(-102%);transition:transform .25s;display:flex;flex-direction:column;padding:calc(16px + env(safe-area-inset-top)) 14px 16px;border-right:1px solid var(--line)}
+#drawer.open{transform:none;box-shadow:8px 0 30px rgba(0,0,0,.25)}
+#scrim{position:fixed;inset:0;background:rgba(10,10,40,.5);z-index:30;opacity:0;pointer-events:none;transition:.25s}#scrim.show{opacity:1;pointer-events:auto}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;color:var(--pri);padding:4px 8px 16px}.brand img{width:36px;height:36px;border-radius:10px}
+#drawer nav{flex:1;overflow:auto}
+#drawer nav a{display:flex;align-items:center;gap:14px;padding:13px 14px;border-radius:14px;color:var(--ink);font-weight:600;margin-bottom:4px}
+#drawer nav a .ic{color:var(--mut)}#drawer nav a.on{background:linear-gradient(135deg,var(--pri),var(--pri2));color:#fff}#drawer nav a.on .ic{color:#fff}
+.me{border-top:1px solid var(--line);padding-top:12px;display:flex;align-items:center;gap:10px}.me div{min-width:0;flex:1}.me b,.me small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.me small{color:var(--mut)}
+main{padding:14px;max-width:820px;margin:0 auto}
+@media(min-width:900px){#drawer{transform:none;box-shadow:none}#scrim{display:none}#menu{display:none}.top,main{margin-left:285px;max-width:none}main{padding:22px;max-width:none}main>*{max-width:820px;margin-left:auto;margin-right:auto}.top{padding-left:24px}}
+/* components */
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:var(--sh)}
+.card h2{font-size:16px;margin:0 0 12px;display:flex;align-items:center;gap:8px}.card h2 .ic{color:var(--pri)}
+.hero{background:linear-gradient(135deg,#2a1fa8,#5a48ff);color:#fff;border-radius:20px;padding:20px;margin-bottom:14px}.hero h2{margin:0 0 4px;font-size:22px}.hero p{margin:0;opacity:.85}
+.hero .row{margin-top:14px}.hero button{background:rgba(255,255,255,.18);color:#fff}.hero .pri{background:#fff;color:var(--pri)}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}@media(min-width:600px){.stats{grid-template-columns:repeat(4,1fr)}}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}.stat b{display:block;font-size:26px;line-height:1.1}.stat span{color:var(--mut);font-size:13px;display:flex;align-items:center;gap:6px;margin-top:4px}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px;background:var(--pale);color:var(--pri)}.pill.ok{background:#e3f6ec;color:var(--ok)}.pill.warn{background:#fff3dc;color:var(--warn)}.pill.bad{background:#fdecea;color:var(--bad)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .pill.ok{background:#12301f}:root:not([data-theme=light]) .pill.warn{background:#3a2e12}:root:not([data-theme=light]) .pill.bad{background:#3a1c20}}
+:root[data-theme=dark] .pill.ok{background:#12301f}:root[data-theme=dark] .pill.warn{background:#3a2e12}:root[data-theme=dark] .pill.bad{background:#3a1c20}
+.seg{display:flex;background:var(--pale);border-radius:14px;padding:4px;gap:4px}.seg button{flex:1;background:none;padding:9px 6px;min-height:40px;font-size:14px;color:var(--mut)}.seg button.on{background:var(--card);color:var(--pri);box-shadow:var(--sh)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}.chip{display:flex;align-items:center;gap:8px;padding:10px 14px;border:1.5px solid var(--line);border-radius:14px;font-weight:600;cursor:pointer;background:var(--card)}.chip input{display:none}.chip:has(input:checked){border-color:var(--pri2);background:var(--pale)}.chip .ic{width:20px;height:20px}
+.fbc{color:var(--fb)}.lic{color:var(--li)}
+.sw{position:relative;display:inline-block;width:50px;height:30px;flex:none}.sw input{opacity:0;position:absolute;inset:0;width:100%;height:100%;margin:0;z-index:2;cursor:pointer}.sw i{position:absolute;inset:0;background:#c5c9e6;border-radius:99px;transition:.2s}.sw i:after{content:"";position:absolute;left:3px;top:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:.2s}.sw input:checked+i{background:var(--ok)}.sw input:checked+i:after{left:23px}
+.opt{display:flex;align-items:center;gap:12px;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line)}.opt:last-child{border:0}.opt b{display:block}.opt small{color:var(--mut)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+/* posts */
+.pc{display:flex;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px;margin-bottom:10px;color:var(--ink);box-shadow:var(--sh)}
+.th{width:78px;height:78px;border-radius:12px;background:var(--pale);flex:none;overflow:hidden;display:grid;place-items:center;color:var(--mut)}.th img{width:100%;height:100%;object-fit:cover}
+.pb{min-width:0;flex:1;display:flex;flex-direction:column;gap:3px}.pb p{margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-weight:500}.pb small{color:var(--mut)}
+.pls{display:inline-flex;gap:5px}.pl{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;color:#fff}.pl .ic{width:14px;height:14px}.pl.fb{background:var(--fb)}.pl.li{background:var(--li)}
+.pb .top2{display:flex;align-items:center;gap:8px;justify-content:space-between}
+.back{display:inline-flex;align-items:center;gap:6px;font-weight:600;margin-bottom:12px}
+.blog img.hero-i{width:100%;max-height:340px;object-fit:cover;border-radius:14px;margin-bottom:14px}.bm{display:flex;align-items:center;gap:8px;flex-wrap:wrap;color:var(--mut);font-size:13px;margin-bottom:12px}
+.bt{white-space:pre-wrap;word-wrap:break-word;font-size:16px;line-height:1.65}.btns{display:grid;gap:8px;margin-top:16px}@media(min-width:520px){.btns{grid-template-columns:1fr 1fr}}
+.es{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.es div{background:var(--pale);border-radius:14px;padding:12px;text-align:center}.es b{display:block;font-size:20px}.es span{font-size:12px;color:var(--mut);display:flex;gap:5px;justify-content:center;align-items:center}
+.cm{display:flex;gap:10px;margin-top:14px}.cm.sub{margin-top:10px}.cm .av{width:34px;height:34px;font-size:14px}.cb{flex:1;min-width:0}.cb p{margin:2px 0 4px;white-space:pre-wrap;word-wrap:break-word;background:var(--pale);padding:8px 12px;border-radius:14px}.cb small{color:var(--mut)}
+.ca{display:flex;gap:4px}.ca button{background:none;padding:4px 8px;min-height:30px;font-size:13px;color:var(--mut)}.ca .ic{width:14px;height:14px}
+.rb{display:flex;gap:8px;margin:6px 0}.rb input{padding:9px 12px}
+.empty{text-align:center;color:var(--mut);padding:26px 10px}.empty .ic{width:38px;height:38px;opacity:.5;margin-bottom:6px}
+.sk{height:78px;border-radius:16px;background:linear-gradient(90deg,var(--pale),var(--card),var(--pale));background-size:200% 100%;animation:sk 1.2s infinite;margin-bottom:10px}@keyframes sk{to{background-position:-200% 0}}
+.plan{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}.plan:last-child{border:0}.plan .tm{font-weight:700;min-width:84px}.plan small{color:var(--mut);display:block}
+.u{display:flex;gap:12px;align-items:center;padding:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;margin-bottom:10px;color:var(--ink)}.u div{flex:1;min-width:0}.u b,.u small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.u small{color:var(--mut)}
+.conn{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.conn:last-child{border:0}.conn .pl{width:38px;height:38px;border-radius:11px}.conn .pl .ic{width:20px;height:20px}.conn div{flex:1;min-width:0}.conn small{color:var(--mut);display:block}
+.img-prev{width:100%;max-height:260px;object-fit:cover;border-radius:14px;margin-top:10px}
+.nw .btn{text-decoration:none}.nw .bm .pill{font-size:11px}
+.bar{position:sticky;bottom:0;padding:10px 0 4px;background:linear-gradient(transparent,var(--bg) 30%)}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translate(-50%,30px);background:#14124a;color:#fff;padding:12px 16px;border-radius:14px;max-width:92vw;white-space:pre-line;opacity:0;pointer-events:none;transition:.25s;z-index:99;font-size:14px}#toast.show{opacity:1;transform:translate(-50%,0)}#toast.ok{background:var(--ok)}#toast.err{background:var(--bad)}
+/* auth */
+#auth{min-height:100vh;display:grid;place-items:center;padding:18px;background:linear-gradient(160deg,#1b1470,#4b3df0)}#auth .card{width:100%;max-width:400px;padding:24px}#auth .brand{justify-content:center;padding-bottom:10px;font-size:24px}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute"><defs>
+<symbol id="i-fb" viewBox="0 0 24 24"><path d="M24 12.07C24 5.45 18.63.07 12 .07S0 5.45 0 12.07c0 5.99 4.39 10.95 10.13 11.85v-8.39H7.08v-3.47h3.05V9.43c0-3.01 1.79-4.67 4.53-4.67 1.31 0 2.69.23 2.69.23v2.95h-1.52c-1.49 0-1.96.93-1.96 1.87v2.25h3.33l-.53 3.47h-2.8v8.39C19.61 23.03 24 18.06 24 12.07z"/></symbol>
+<symbol id="i-li" viewBox="0 0 24 24"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></symbol>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+<symbol id="i-set" viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></symbol>
+<symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9z"/></symbol>
+<symbol id="i-out" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></symbol>
+<symbol id="i-like" viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></symbol>
+<symbol id="i-cmt" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+<symbol id="i-share" viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v13"/></symbol>
+<symbol id="i-ext" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></symbol>
+<symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></symbol>
+<symbol id="i-del" viewBox="0 0 24 24"><path d="M3 6h18M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></symbol>
+<symbol id="i-ref" viewBox="0 0 24 24"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></symbol>
+<symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></symbol>
+<symbol id="i-ok" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></symbol>
+<symbol id="i-ai" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/></symbol>
+<symbol id="i-img" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+<symbol id="i-send" viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></symbol>
+<symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M16 13H8M16 17H8"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+<symbol id="i-news" viewBox="0 0 24 24"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2M18 14h-8M15 18h-5M10 6h8v4h-8z"/></symbol>
+<symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></symbol>
+<symbol id="i-stop" viewBox="0 0 24 24"><polygon points="7.9 2 16.1 2 22 7.9 22 16.1 16.1 22 7.9 22 2 16.1 2 7.9"/><path d="M12 8v4M12 16h.01"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol>
+<symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18M7 14l4-4 3 3 5-6"/></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+</defs></svg>
+
+<section id="auth" class="hide"><div class="card">
+  <div class="brand"><img src="logo.png" alt="" width="40" height="40">AraaPosts</div>
+  <div id="authBad" class="hide"><p>Firebase sign-in is not set up on the server. Set <b>FIREBASE_WEB_API_KEY</b> and the other FIREBASE_* values, then reload.</p></div>
+  <div id="authOk" class="hide">
+    <div id="signBox">
+      <div id="firstBox" class="hide"><div class="hint"><b>First-time setup.</b> This account becomes the <b>super admin</b>. Other staff accounts are created by you inside the dashboard (Users &gt; Add admin).</div>
+        <label class="l" for="name">Your full name</label><input id="name" autocomplete="name" maxlength="60">
+        <label class="l" for="dob">Date of birth (used to recover your password)</label><input id="dob" type="date">
+        <label class="l" for="phone">Phone (optional)</label><input id="phone" type="tel" maxlength="25"></div>
+      <label class="l" for="email">Official email</label><input id="email" type="email" autocomplete="email">
+      <label class="l" for="pass">Password</label><input id="pass" type="password" autocomplete="current-password" placeholder="At least 8 characters, letters and numbers">
+      <div class="row" style="margin-top:16px"><button class="pri" id="authGo" style="flex:1">Sign in</button><button id="forgot">Forgot password</button></div>
+    </div>
+    <div id="forgotBox" class="hide"><h2 style="margin:0 0 6px">Reset your password</h2><div class="hint">Enter your official email and your date of birth. If they match, we send a reset email.</div>
+      <label class="l" for="fEmail">Email</label><input id="fEmail" type="email" autocomplete="email">
+      <label class="l" for="fDob">Date of birth</label><input id="fDob" type="date">
+      <div class="row" style="margin-top:16px"><button class="pri" id="fSend" style="flex:1">Send reset email</button><button id="fBack">Back</button></div></div>
+  </div>
+</div></section>
+
+<section id="pending" class="hide" style="min-height:100vh;display:grid;place-items:center;padding:18px"><div class="card" style="max-width:400px;text-align:center">
+  <h2 style="justify-content:center">No access yet</h2><p>Your account has no active position. Ask the super admin to give you one.</p>
+  <div class="row" style="justify-content:center"><button class="pri" id="recheck">Check again</button><button id="pendingOut">Sign out</button></div>
+</div></section>
+
+<div id="app" class="hide">
+  <aside id="drawer">
+    <div class="brand"><img src="logo.png" alt="">AraaPosts</div>
+    <nav id="nav"></nav>
+    <div class="themesel" role="group" aria-label="Theme"><div class="seg"><button type="button" data-theme-set="light" aria-pressed="false">Light</button><button type="button" data-theme-set="dark" aria-pressed="false">Dark</button><button type="button" data-theme-set="system" aria-pressed="false">System</button></div></div>
+    <div class="me"><div class="av" id="meAv"></div><div><b id="meName"></b><small id="meRole"></small></div><button class="sm" id="logout" title="Sign out"><svg class="ic"><use href="#i-out"/></svg></button></div>
+  </aside>
+  <div id="scrim"></div>
+  <header class="top"><button id="menu" aria-label="Menu"><svg class="ic"><use href="#i-menu"/></svg></button><h1 id="title">Home</h1><button id="bell" aria-label="Notifications" style="position:relative"><svg class="ic"><use href="#i-bell"/></svg><span id="bellN" class="hide" style="position:absolute;top:2px;right:0;background:var(--bad);color:#fff;border-radius:99px;font-size:11px;padding:0 6px;line-height:17px;font-weight:700"></span></button><a href="#profile" class="av" id="topAv" aria-label="My profile"></a></header>
+  <main id="main"></main>
+</div>
+<div id="toast"></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const I=(n,c='')=>`<svg class="ic ${c}"><use href="#i-${n}"/></svg>`, B=n=>I(n,'f');
+const LS={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
+let FB_KEY='',ME=null,T=null,navId=0;
+const main=$('main');
+function toast(m,t){const e=$('toast');e.textContent=m;e.className='show '+(t||'');clearTimeout(toast._t);toast._t=setTimeout(()=>e.className='',3200+1200*String(m).split('\n').length)}
+async function run(btn,fn,txt){const o=btn.innerHTML;btn.disabled=true;if(txt)btn.innerHTML=txt;try{return await fn()}catch(e){toast(e.message,'err')}finally{btn.disabled=false;btn.innerHTML=o}}
+const LABEL={facebook:'Facebook',linkedin_personal:'LinkedIn profile',linkedin_company:'LinkedIn page'};
+function report(res,verb,sched){const l=[];let bad=false;for(const k in LABEL){const r=res[k];if(!r)continue;if(r.ok)l.push(LABEL[k]+': '+(sched&&k==='facebook'?'scheduled':verb));else{bad=true;l.push(LABEL[k]+': failed - '+r.error)}}if(l.length)toast(l.join('\n'),bad?'err':'ok');return !bad}
+const liRes=x=>Object.fromEntries(Object.entries(x||{}).map(([k,v])=>['linkedin_'+k,v]));
+const fmt=ms=>new Date(ms).toLocaleString([],{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+const ago=ms=>{const s=(Date.now()-ms)/1000;if(s<60)return 'now';if(s<3600)return Math.floor(s/60)+'m';if(s<86400)return Math.floor(s/3600)+'h';if(s<604800)return Math.floor(s/86400)+'d';return new Date(ms).toLocaleDateString([],{month:'short',day:'numeric'})};
+const empty=(ic,t)=>`<div class="empty">${I(ic)}<div>${esc(t)}</div></div>`;
+const sk=n=>'<div class="sk"></div>'.repeat(n);
+const plat=(fb,li)=>`<span class="pls">${fb?`<span class="pl fb" title="Facebook">${B('fb')}</span>`:''}${li?`<span class="pl li" title="LinkedIn">${B('li')}</span>`:''}</span>`;
+const init=()=>'<img src="logo.png" alt="">'; // never letters: the Araa logo is the default picture
+const avImg=u=>`<img src="${esc((u&&u.photo)||'logo.png')}" alt="">`;
+const can=p=>!!(ME&&ME.perms&&(ME.perms.includes('*')||ME.perms.includes(p)));
+
+/* ---------- Firebase Authentication (REST) ---------- */
+function authMsg(m=''){if(/EMAIL_EXISTS/.test(m))return 'That email already has an account - use Sign in';if(/INVALID_LOGIN|INVALID_PASSWORD|EMAIL_NOT_FOUND/.test(m))return 'Wrong email or password';if(/WEAK_PASSWORD/.test(m))return 'Password must be at least 6 characters';if(/INVALID_EMAIL/.test(m))return 'That email is not valid';if(/OPERATION_NOT_ALLOWED/.test(m))return 'Email/password sign-in is off in Firebase Authentication';if(/TOO_MANY/.test(m))return 'Too many attempts - try later';if(/USER_DISABLED/.test(m))return 'This account is disabled';return m||'Sign-in failed'}
+async function fbAuth(ep,body){const r=await fetch('https://identitytoolkit.googleapis.com/v1/'+ep+'?key='+encodeURIComponent(FB_KEY),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(authMsg(d.error&&d.error.message));return d}
+function setTokens(id,rt,exp){T={id,refresh:rt,exp:Date.now()+(Number(exp)||3600)*1000};LS.set('araa_rt',rt)}
+async function refreshTokens(){const rt=(T&&T.refresh)||LS.get('araa_rt');if(!rt)throw new Error('Signed out');const r=await fetch('https://securetoken.googleapis.com/v1/token?key='+encodeURIComponent(FB_KEY),{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'grant_type=refresh_token&refresh_token='+encodeURIComponent(rt)});const d=await r.json().catch(()=>({}));if(!r.ok||!d.id_token)throw new Error('Session expired');setTokens(d.id_token,d.refresh_token,d.expires_in)}
+async function idToken(){if(!T||Date.now()>T.exp-60000){try{await refreshTokens()}catch(e){lock();throw new Error('Please sign in again')}}return T.id}
+async function api(method,path,body,retried){
+  const res=await fetch(path,{method,headers:{'Content-Type':'application/json',Authorization:'Bearer '+(await idToken())},body:body?JSON.stringify(body):undefined});
+  const d=await res.json().catch(()=>({}));
+  if(res.status===401){if(!retried){try{await refreshTokens();return api(method,path,body,true)}catch(e){}}lock();throw new Error('Please sign in again')}
+  if(res.status===403&&d.code==='pending'){ME={...ME,role:'pending'};showPending();throw new Error(d.error)}
+  if(!res.ok||d.error)throw new Error(d.error||'Request failed ('+res.status+')');
+  return d}
+
+/* ---------- screens / shell ---------- */
+const roleName={super:'Super admin',manager:'Manager',admin:'Manager',content_creator:'Content creator',analyst:'Analyst',seo_specialist:'SEO specialist',community_manager:'Community manager',pending:'No access'};
+const hideAll=()=>['auth','pending','app'].forEach(x=>$(x).classList.add('hide'));
+function showAuth(){hideAll();$('auth').classList.remove('hide')}
+function showPending(){hideAll();$('pending').classList.remove('hide')}
+const MENU=[['home','Home','home',''],['create','Create post','plus','post.create'],['posts','Posts','list',''],['analytics','Analytics','chart','analytics.view'],['news','News','news','news.view'],['ai','Marketing AI','ai','analytics.view'],['agent','AI tools','star','ai.use'],['brand','Brand','star','brand.edit'],['mail','Email & alerts','send','mail.manage'],['activity','Activity','clock','activity.view'],['users','Team','users','users.view'],['profile','My profile','shield',''],['settings','Settings','set','settings.edit'],['auto','Automation','zap','automation.control']];
+const NEED=Object.fromEntries(MENU.filter(m=>m[3]).map(m=>[m[0],m[3]]));
+function showApp(){hideAll();$('app').classList.remove('hide');
+  $('nav').innerHTML=MENU.filter(m=>!m[3]||can(m[3])).map(([r,t,i])=>`<a href="#${r}" data-r="${r}">${I(i)}<span>${t}</span></a>`).join('');
+  $('meAv').innerHTML=$('topAv').innerHTML=avImg(ME);$('meName').textContent=ME.name;$('meRole').textContent=(ME.position||roleName[ME.role]||ME.role);startBell();
+  route()}
+function lock(){T=null;ME=null;LS.del('araa_rt');POSTS=null;showAuth()}
+const drawer=$('drawer'),scrim=$('scrim');
+const openMenu=o=>{drawer.classList.toggle('open',o);scrim.classList.toggle('show',o)};
+$('menu').onclick=()=>openMenu(true);scrim.onclick=()=>openMenu(false);$('logout').onclick=lock;$('pendingOut').onclick=lock;
+async function enter(extra){const r=await api('POST','/api/session',extra||{});ME=r.user;ME.role==='pending'?showPending():showApp()}
+$('recheck').onclick=e=>run(e.currentTarget,async()=>{await enter({});if(ME.role==='pending')toast('Still no access - ask the super admin')});
+let FIRST=false;
+$('authGo').onclick=()=>{const email=$('email').value.trim(),password=$('pass').value,name=$('name').value.trim();
+  if(!email||!password)return toast('Enter email and password','err');
+  if(FIRST){if(!name)return toast('Enter your name','err');if(!$('dob').value)return toast('Enter your date of birth','err');if(password.length<8||!/\d/.test(password)||!/[A-Za-z]/.test(password))return toast('Password needs 8+ characters with letters and numbers','err')}
+  run($('authGo'),async()=>{const d=await fbAuth(FIRST?'accounts:signUp':'accounts:signInWithPassword',{email,password,returnSecureToken:true});setTokens(d.idToken,d.refreshToken,d.expiresIn);$('pass').value='';await enter(FIRST?{name,dob:$('dob').value,phone:$('phone').value.trim()}:{})})};
+$('pass').onkeydown=e=>{if(e.key==='Enter')$('authGo').click()};
+$('forgot').onclick=()=>{$('fEmail').value=$('email').value;$('signBox').classList.add('hide');$('forgotBox').classList.remove('hide')};
+$('fBack').onclick=()=>{$('forgotBox').classList.add('hide');$('signBox').classList.remove('hide')};
+$('fSend').onclick=e=>{const email=$('fEmail').value.trim(),dob=$('fDob').value;if(!email||!dob)return toast('Enter your email and date of birth','err');
+  run(e.currentTarget,async()=>{const r=await fetch('/auth/forgot',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,dob})});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Could not send');toast(d.message,'ok');$('fBack').click()})};
+
+/* ---------- router ---------- */
+const TITLES={analytics:'Analytics',ai:'Marketing AI',mail:'Email & alerts',profile:'My profile',notifications:'Notifications',adduser:'Add admin',home:'Home',create:'Create post',posts:'Posts',post:'Post',news:'News',agent:'Marketing AI',brand:'Brand',activity:'Activity',users:'Team',user:'Team member',settings:'Settings',auto:'Automation'};
+const VIEWS={};
+async function route(){
+  if(!ME)return;
+  const h=location.hash.slice(1)||'home',i=h.indexOf('/'),r=i<0?h:h.slice(0,i),arg=i<0?'':decodeURIComponent(h.slice(i+1));
+  const v=VIEWS[r]||VIEWS.home,id=++navId;
+  if(NEED[r]&&!can(NEED[r])){main.innerHTML=empty('shield','Your position does not include this page');return}
+  const grp={post:'posts',user:'users'}[r]||r;
+  document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.r===(VIEWS[r]?grp:'home')));
+  $('title').textContent=TITLES[r]||'Home';openMenu(false);window.scrollTo(0,0);main.innerHTML=sk(3);
+  try{const html=await v.load(arg);if(id!==navId)return;main.innerHTML=html;v.bind&&v.bind(arg)}catch(e){if(id===navId)main.innerHTML=empty('x',e.message)}}
+window.addEventListener('hashchange',route);
+document.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if(!el)return;const f=ACT[el.dataset.act];if(f)f(el,e)});
+const ACT={};
+
+/* ---------- posts data ---------- */
+let POSTS=null;
+function normRec(r){const t=r.targets||{},lp=t.linkedin_personal,lc=t.linkedin_company,f=t.facebook;
+  const lis=[];if(lp&&lp.url)lis.push(['LinkedIn profile',lp.url]);if(lc&&lc.url)lis.push(['LinkedIn page',lc.url]);
+  return{key:'r'+r.id,rec:r,id:r.id,text:r.text||'',img:r.imageUrl||'',hasImg:r.hasImage,at:r.createdAt,fb:!!f,li:!!(lp||lc),fbId:f&&f.postId,fbUrl:f&&f.url,lis,author:r.author&&r.author.name,source:r.source,sched:!!(f&&f.scheduledAt&&f.scheduledAt>Date.now()),schedAt:f&&f.scheduledAt,edited:r.updatedAt}}
+const normFb=(p,s)=>({key:'f'+p.id,id:p.id,old:true,text:p.message||'',img:p.full_picture||'',at:s?p.scheduled_publish_time*1000:Date.parse(p.created_time),fb:true,li:false,fbId:p.id,fbUrl:p.permalink_url||'',lis:[],sched:s,schedAt:s?p.scheduled_publish_time*1000:0});
+async function loadPosts(force){
+  if(POSTS&&!force&&Date.now()-POSTS.t<30000)return POSTS.list;
+  const [rows,fl,sc]=await Promise.all([api('GET','/api/records?limit=40'),api('GET','/api/posts?limit=20').catch(()=>({data:[]})),api('GET','/api/scheduled').catch(()=>({data:[]}))]);
+  const seen=new Set(rows.map(r=>r.targets&&r.targets.facebook&&r.targets.facebook.postId).filter(Boolean));
+  const list=[...rows.map(normRec),...(fl.data||[]).filter(p=>!seen.has(p.id)).map(p=>normFb(p,false)),...(sc.data||[]).filter(p=>!seen.has(p.id)).map(p=>normFb(p,true))].sort((a,b)=>b.at-a.at);
+  POSTS={t:Date.now(),list};return list}
+const card=p=>`<a class="pc" href="#post/${encodeURIComponent(p.key)}"><div class="th">${p.img?`<img src="${esc(p.img)}" loading="lazy" alt="">`:I(p.hasImg?'img':'doc')}</div>
+<div class="pb"><div class="top2">${plat(p.fb,p.li)}${p.sched?'<span class="pill warn">'+I('clock')+' Scheduled</span>':''}</div><p>${esc(p.text)||'<i>(image only)</i>'}</p><small>${p.sched?'Goes live '+fmt(p.schedAt):ago(p.at)+' ago'}${p.author?' · '+esc(p.author):''}</small></div></a>`;
+
+/* ---------- Home ---------- */
+VIEWS.home={async load(){
+  const [s,list,dr]=await Promise.all([api('GET','/api/status'),loadPosts().catch(()=>[]),Promise.resolve(null)]);
+  const st=s.settings,fbn=list.filter(p=>p.fb).length,lin=list.filter(p=>p.li).length;
+  const nextJob=(s.plan.jobs||[]).find(j=>j.status==='pending');
+  return (st.paused?`<div class="card" style="background:#fdecea;color:var(--bad)"><h2 style="color:var(--bad)">${I('stop')} Emergency stop is ON</h2><div class="hint" style="color:inherit">Nothing is posted automatically.</div><button class="pri full" style="margin-top:10px" data-act="estop">Resume automation</button></div>`:'')+`<div class="hero"><h2>Hi, ${esc((ME.name||'').split(' ')[0])} 👋</h2><p>${st.paused?'Automation is STOPPED':st.enabled?'Automation is ON':'Automation is OFF'}</p><p style="font-size:13px">Next post: ${nextJob&&st.enabled&&!st.paused?fmt(nextJob.at):'-'} · Last successful run: ${s.plan.lastOk?fmt(s.plan.lastOk):'-'}</p>
+  <div class="row"><a class="btn pri" href="#create">${I('plus')} New post</a><a class="btn" href="#auto">${I('zap')} Automation</a></div></div>
+  <div class="stats"><div class="stat"><b>${list.length}</b><span>${I('doc')} Posts</span></div><div class="stat"><b>${fbn}</b><span class="fbc">${B('fb')} Facebook</span></div><div class="stat"><b>${lin}</b><span class="lic">${B('li')} LinkedIn</span></div><div class="stat"><b>${(s.drafts||[]).length}</b><span>${I('clock')} Drafts</span></div></div>
+  <div class="card"><h2>${I('link')} Connections</h2><div class="row"><span class="pill ${s.facebook&&s.facebook.ok?'ok':'bad'}">${B('fb')} ${s.facebook&&s.facebook.ok?esc(s.facebook.name):'Not connected'}</span><span class="pill ${s.linkedin&&s.linkedin.connected?'ok':'warn'}">${B('li')} ${s.linkedin&&s.linkedin.connected?esc(s.linkedin.name||'Connected'):'Not connected'}</span><span class="pill ${s.ai?'ok':'bad'}">${I('ai')} AI</span><span class="pill ${s.unsplash?'ok':'warn'}">${I('img')} Images</span></div></div>
+  <div class="row sp" style="margin:6px 2px 10px"><b>Recent posts</b><a href="#posts">See all</a></div>
+  ${list.slice(0,4).map(card).join('')||empty('doc','No posts yet')}`}};
+
+/* ---------- Create post ---------- */
+let C={type:'text',src:'upload',img:'',ai:''};
+VIEWS.create={load(){C={type:'text',src:'upload',img:'',ai:''};
+  return `<div class="card"><div class="seg" id="typeSeg"><button data-v="text" class="on">${I('doc')} Text</button><button data-v="image">${I('img')} Image</button><button data-v="both">Both</button></div>
+  <div id="textBox"><label class="l" for="message">Post text <span style="float:right;font-weight:400"><span id="count">0</span> chars</span></label><textarea id="message" placeholder="Write your post, or let AI write it"></textarea>
+  <div class="row" style="margin-top:8px;flex-wrap:nowrap"><input id="topic" placeholder="AI topic (optional)"><button class="sm" id="aiWrite" style="white-space:nowrap">${I('ai')} Write</button></div>
+  <div id="linkBox"><label class="l" for="link">Link (optional)</label><input id="link" type="url" placeholder="https://araasoftwares.com"></div></div>
+  <div id="imgBox" class="hide"><label class="l">Image</label><div class="seg" id="srcSeg"><button data-v="upload" class="on">Upload</button><button data-v="url">URL</button><button data-v="ai">AI find</button></div>
+  <div style="margin-top:10px"><div id="src-upload"><input id="file" type="file" accept="image/*"></div><div id="src-url" class="hide"><input id="imageUrl" type="url" placeholder="https://example.com/photo.jpg"></div>
+  <div id="src-ai" class="hide"><div class="row" style="flex-wrap:nowrap"><input id="keyword" placeholder="e.g. web development"><button class="sm" id="aiImg" style="white-space:nowrap">${I('img')} Find</button></div></div></div>
+  <img id="preview" class="img-prev hide" alt=""><div class="hint" id="credit"></div></div></div>
+  <div class="card"><h2>${I('send')} Post to</h2><div class="chips" id="targets">
+   <label class="chip"><input type="checkbox" value="facebook" checked><span class="fbc">${B('fb')}</span>Facebook</label>
+   <label class="chip"><input type="checkbox" value="linkedin_personal"><span class="lic">${B('li')}</span>Profile</label>
+   <label class="chip"><input type="checkbox" value="linkedin_company"><span class="lic">${B('li')}</span>Company page</label></div>
+  <label class="l" for="when">Schedule (Facebook only, optional)</label><input id="when" type="datetime-local"><div class="hint">LinkedIn posts publish immediately. Images: JPG, PNG, WEBP or GIF.</div></div>
+  <div class="bar"><button class="pri full" id="publish">${I('send')} Publish</button></div>`},
+ bind(){
+  {const dr=LS.get('araa_draft');if(dr){$('message').value=dr;$('count').textContent=dr.length;LS.del('araa_draft')}}
+  const lay=()=>{$('textBox').classList.toggle('hide',C.type==='image');$('imgBox').classList.toggle('hide',C.type==='text');$('linkBox').classList.toggle('hide',C.type!=='text')};
+  const seg=(id,cb)=>{const b=$(id);b.querySelectorAll('button').forEach(x=>x.onclick=()=>{b.querySelectorAll('button').forEach(y=>y.classList.toggle('on',y===x));cb(x.dataset.v)})};
+  const prev=()=>{const u=C.src==='upload'?C.img:C.src==='url'?$('imageUrl').value.trim():C.ai;$('preview').classList.toggle('hide',!u);if(u)$('preview').src=u};
+  seg('typeSeg',v=>{C.type=v;lay()});seg('srcSeg',v=>{C.src=v;['upload','url','ai'].forEach(x=>$('src-'+x).classList.toggle('hide',x!==v));prev()});
+  $('imageUrl').oninput=prev;$('message').oninput=()=>$('count').textContent=$('message').value.length;
+  $('file').onchange=()=>{const f=$('file').files[0];if(!f)return;const im=new Image(),u=URL.createObjectURL(f);
+    im.onload=()=>{const s=Math.min(1,2048/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext('2d').drawImage(im,0,0,c.width,c.height);C.img=c.toDataURL('image/jpeg',.9);URL.revokeObjectURL(u);prev()};
+    im.onerror=()=>toast('Could not read that image','err');im.src=u};
+  $('aiWrite').onclick=e=>run(e.currentTarget,async()=>{const d=await api('POST','/api/ai/draft',{topic:$('topic').value});$('message').value=d.text;$('count').textContent=d.text.length;if(C.type!=='text'&&C.src==='ai'&&!$('keyword').value)$('keyword').value=d.imageKeyword||'';toast('Draft ready - edit it if you like','ok')},'Writing…');
+  $('aiImg').onclick=e=>run(e.currentTarget,async()=>{const d=await api('POST','/api/ai/image',{keyword:$('keyword').value});C.ai=d.imageUrl;$('credit').textContent=d.credit||'';prev()},'…');
+  $('publish').onclick=e=>run(e.currentTarget,async()=>{const body={},msg=$('message').value.trim();
+    if(C.type!=='image'){if(!msg)throw new Error('Write some text first');body.message=msg;if(C.type==='text'&&$('link').value.trim())body.link=$('link').value.trim()}
+    if(C.type!=='text'){if(C.src==='upload'){if(!C.img)throw new Error('Choose an image first');body.imageData=C.img}else if(C.src==='url'){const u=$('imageUrl').value.trim();if(!u)throw new Error('Paste an image URL');body.imageUrl=u}else{if(!C.ai)throw new Error('Tap Find first');body.imageUrl=C.ai}}
+    const w=$('when').value;if(w)body.scheduleAt=new Date(w).toISOString();
+    body.targets=[...document.querySelectorAll('#targets input:checked')].map(c=>c.value);if(!body.targets.length)throw new Error('Pick at least one place to post to');
+    const {results}=await api('POST','/api/publish',body);POSTS=null;
+    if(report(results,'published',!!w))location.hash='#posts'},'Publishing…')}};
+
+/* ---------- Posts list ---------- */
+let FILTER='all';
+const flt=(l,f)=>f==='fb'?l.filter(p=>p.fb):f==='li'?l.filter(p=>p.li):f==='sc'?l.filter(p=>p.sched):l;
+VIEWS.posts={async load(){const list=await loadPosts(true);VIEWS.posts.list=list;
+  return `<div class="row sp" style="margin-bottom:12px"><div class="seg" id="fseg" style="flex:1">${[['all','All'],['fb','Facebook'],['li','LinkedIn'],['sc','Scheduled']].map(([v,t])=>`<button data-v="${v}" class="${v===FILTER?'on':''}">${t}</button>`).join('')}</div><button class="sm" data-act="repost">${I('ref')}</button></div><div id="plist"></div>`},
+ bind(){const draw=()=>{const l=flt(VIEWS.posts.list,FILTER);$('plist').innerHTML=l.map(card).join('')||empty('doc','No posts here yet')};draw();
+  $('fseg').querySelectorAll('button').forEach(b=>b.onclick=()=>{FILTER=b.dataset.v;$('fseg').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));draw()})}};
+ACT.repost=()=>{POSTS=null;route()};
+
+/* ---------- Full blog view ---------- */
+VIEWS.post={async load(key){
+  const list=await loadPosts();const p=list.find(x=>x.key===key);
+  if(!p)return `<a class="back" href="#posts">${I('back')} Posts</a>`+empty('doc','Post not found (it may have been deleted)');
+  VIEWS.post.p=p;
+  const btns=[];if(p.fbUrl)btns.push(`<a class="btn fb" href="${esc(p.fbUrl)}" target="_blank" rel="noopener">${B('fb')} View on Facebook ${I('ext')}</a>`);
+  p.lis.forEach(([l,u])=>btns.push(`<a class="btn li" href="${esc(u)}" target="_blank" rel="noopener">${B('li')} View on ${l==='LinkedIn page'?'LinkedIn page':'LinkedIn'} ${I('ext')}</a>`));
+  if(p.li&&!p.lis.length)btns.push(`<a class="btn li" href="https://www.linkedin.com/feed/" target="_blank" rel="noopener">${B('li')} Open LinkedIn ${I('ext')}</a>`);
+  return `<a class="back" href="#posts">${I('back')} Posts</a>
+  <article class="card blog">${p.img?`<img class="hero-i" src="${esc(p.img)}" alt="">`:''}
+  <div class="bm">${plat(p.fb,p.li)}<span>${fmt(p.at)}</span>${p.author?`<span>· ${esc(p.author)}</span>`:''}${p.sched?`<span class="pill warn">${I('clock')} Scheduled ${fmt(p.schedAt)}</span>`:''}${p.edited?'<span>· edited</span>':''}</div>
+  <div class="bt">${esc(p.text)||'<i>(image only)</i>'}</div>${btns.length?`<div class="btns">${btns.join('')}</div>`:''}</article>
+  <div class="card" id="eng"><h2>${I('cmt')} Engagement</h2>${sk(1)}</div>
+  <div class="card" id="panel"><div class="row"><button data-act="pedit" style="flex:1">${I('edit')} Edit</button><button class="dang" data-act="pdel" style="flex:1">${I('del')} Delete</button></div></div>`},
+ bind(){loadEng(VIEWS.post.p)}};
+async function loadEng(p){const el=$('eng');if(!el)return;let h=`<h2>${I('cmt')} Engagement</h2>`;
+  if(p.fbId&&!p.sched){try{const d=await api('GET','/api/engagement/'+encodeURIComponent(p.fbId));
+    h+=`<div class="es"><div><b>${d.likes}</b><span class="fbc">${I('like')} Likes</span></div><div><b>${d.commentsTotal}</b><span>${I('cmt')} Comments</span></div><div><b>${d.shares}</b><span>${I('share')} Shares</span></div></div>`+
+    (d.comments.length?d.comments.map(c=>cmt(c)).join(''):'<div class="hint" style="text-align:center;margin-top:12px">No comments yet</div>')
+  }catch(e){h+=`<div class="hint">Facebook comments are not available: ${esc(e.message)}<br>The Page token needs the <b>pages_read_engagement</b> permission (and <b>pages_manage_engagement</b> to reply).</div>`}}
+  if(p.li)h+=`<div class="hint" style="margin-top:12px">${B('li')} LinkedIn does not share likes or comments with this app. Use <b>View on LinkedIn</b> to see and reply there.</div>`;
+  if(!p.fb&&!p.li)h+=empty('cmt','Nothing to show');
+  el.innerHTML=h}
+function cmt(c,sub){const f=c.from||{},pic=f.picture&&f.picture.data&&f.picture.data.url;
+  return `<div class="cm ${sub?'sub':''}"><div class="av">${pic?`<img src="${esc(pic)}" alt="">`:init(f.name)}</div><div class="cb"><b>${esc(f.name||'Facebook user')}</b> <small>${ago(Date.parse(c.created_time))}</small><p>${esc(c.message)}</p>
+  <div class="ca"><button data-act="clike" data-id="${esc(c.id)}">${I('like')} Like${c.like_count?' · '+c.like_count:''}</button>${sub?'':`<button data-act="creply" data-id="${esc(c.id)}">${I('cmt')} Reply</button>`}</div><div class="rbox"></div>
+  ${((c.comments&&c.comments.data)||[]).map(r=>cmt(r,true)).join('')}</div></div>`}
+ACT.creply=el=>{const box=el.closest('.cb').querySelector('.rbox');if(box.firstChild){box.innerHTML='';return}
+  box.innerHTML=`<div class="rb"><input placeholder="Write a reply…" maxlength="2000"><button class="pri sm" data-act="csend" data-id="${esc(el.dataset.id)}">${I('send')}</button></div>`;box.querySelector('input').focus()};
+ACT.csend=el=>{const inp=el.closest('.rb').querySelector('input');if(!inp.value.trim())return;run(el,async()=>{await api('POST','/api/comments/'+encodeURIComponent(el.dataset.id)+'/reply',{message:inp.value});toast('Reply sent','ok');loadEng(VIEWS.post.p)})};
+ACT.clike=el=>run(el,async()=>{await api('POST','/api/comments/'+encodeURIComponent(el.dataset.id)+'/like');toast('Liked','ok');loadEng(VIEWS.post.p)});
+const picker=p=>{const k=p.rec?Object.keys(p.rec.targets||{}):['facebook'];return `<div class="chips" id="pk">${k.map(t=>`<label class="chip"><input type="checkbox" value="${t}" checked><span class="${t==='facebook'?'fbc':'lic'}">${B(t==='facebook'?'fb':'li')}</span>${LABEL[t]}</label>`).join('')}</div>`};
+const picked=()=>[...document.querySelectorAll('#pk input:checked')].map(c=>c.value);
+const resetPanel=()=>{$('panel').innerHTML=`<div class="row"><button data-act="pedit" style="flex:1">${I('edit')} Edit</button><button class="dang" data-act="pdel" style="flex:1">${I('del')} Delete</button></div>`};
+ACT.pedit=()=>{const p=VIEWS.post.p;$('panel').innerHTML=`<h2>${I('edit')} Edit text</h2><textarea id="etx">${esc(p.text)}</textarea>${p.rec&&Object.keys(p.rec.targets).length>1?`<label class="l">Save on</label>${picker(p)}`:p.rec?`<div id="pk" class="hide"><input type="checkbox" value="${Object.keys(p.rec.targets)[0]}" checked></div>`:''}${p.li?'<div class="hint">LinkedIn only changes the text; the image stays.</div>':''}<div class="row" style="margin-top:12px"><button class="pri" id="esv" style="flex:1">${I('ok')} Save</button><button data-act="pcancel">Cancel</button></div>`;
+  $('esv').onclick=e=>run(e.currentTarget,async()=>{const t=$('etx').value;if(!t.trim())throw new Error('Text cannot be empty');
+    if(p.rec){const tg=picked();if(!tg.length)throw new Error('Choose where to save');report((await api('PUT','/api/records/'+encodeURIComponent(p.id),{message:t,targets:tg})).results,'edited')}
+    else{await api('PUT','/api/posts/'+encodeURIComponent(p.id),{message:t});report({facebook:{ok:true}},'edited')}
+    POSTS=null;route()})};
+ACT.pcancel=resetPanel;
+ACT.pdel=()=>{const p=VIEWS.post.p;$('panel').innerHTML=`<h2>${I('del')} Delete post</h2>${p.rec&&Object.keys(p.rec.targets).length>1?`<label class="l">Delete from</label>${picker(p)}`:p.rec?`<div id="pk" class="hide"><input type="checkbox" value="${Object.keys(p.rec.targets)[0]}" checked></div>`:''}<div class="hint">This cannot be undone.</div><div class="row" style="margin-top:12px"><button class="dang" id="edl" style="flex:1">${I('del')} Delete</button><button data-act="pcancel">Cancel</button></div>`;
+  $('edl').onclick=e=>run(e.currentTarget,async()=>{
+    if(p.rec){const tg=picked();if(!tg.length)throw new Error('Choose where to delete');const r=await api('DELETE','/api/records/'+encodeURIComponent(p.id)+'?targets='+encodeURIComponent(tg.join(',')));report(r.results,'deleted');POSTS=null;r.removed?location.hash='#posts':route()}
+    else{await api('DELETE','/api/posts/'+encodeURIComponent(p.id));report({facebook:{ok:true}},'deleted');POSTS=null;location.hash='#posts'}})};
+
+/* ---------- Settings ---------- */
+const TZ=[[180,'Qatar (UTC+3)'],[330,'Sri Lanka / India (UTC+5:30)'],[0,'UTC'],[240,'UAE (UTC+4)'],[300,'Pakistan (UTC+5)']];
+VIEWS.settings={async load(){const s=await api('GET','/api/status'),st=s.settings,l=s.linkedin||{},f=s.facebook||{};
+  const tz=TZ.some(t=>t[0]===st.utcOffsetMinutes)?TZ:[...TZ,[st.utcOffsetMinutes,'UTC offset '+st.utcOffsetMinutes+' min']];
+  return `<div class="card"><h2>${I('link')} Connections</h2>
+  <div class="conn"><span class="pl fb">${B('fb')}</span><div><b>Facebook Page</b><small>${f.ok?esc(f.name):esc(f.error||'Not connected')}</small></div><span class="pill ${f.ok?'ok':'bad'}">${f.ok?'Connected':'Off'}</span></div>
+  <div class="conn"><span class="pl li">${B('li')}</span><div><b>LinkedIn</b><small>${l.connected?esc(l.name||'Connected')+(l.expiresAt?' · token ends '+new Date(l.expiresAt).toLocaleDateString():''):l.configured?'Not connected':'Set LI_CLIENT_ID, LI_CLIENT_SECRET, LI_REDIRECT_URI on the server'}</small>${l.error?`<small style="color:var(--bad)">${esc(l.error)}</small>`:''}</div><span class="pill ${l.connected?'ok':'warn'}">${l.connected?'Connected':'Off'}</span></div>
+  ${l.configured?`<div class="row" style="margin-top:10px"><button class="pri sm" data-act="liconn">${B('li')} ${l.connected?'Reconnect':'Connect'} LinkedIn</button>${l.connected?'<button class="dang sm" data-act="lidis">Disconnect</button>':''}</div>`:''}
+  <div class="conn" style="margin-top:6px"><span class="pl" style="background:var(--pri)">${I('ai')}</span><div><b>AI writing</b><small>${s.ai?'Key set':'GROQ key missing'}</small></div><span class="pill ${s.ai?'ok':'bad'}">${s.ai?'Ready':'Missing'}</span></div>
+  <div class="conn"><span class="pl" style="background:var(--pri)">${I('img')}</span><div><b>Image search</b><small>${s.unsplash?'Key set':'Unsplash key missing'}</small></div><span class="pill ${s.unsplash?'ok':'warn'}">${s.unsplash?'Ready':'Missing'}</span></div></div>
+  <div class="card"><h2>${I('zap')} Automation posts to</h2>
+  <div class="opt"><div><b>LinkedIn profile</b><small>Also post automatic posts there</small></div><label class="sw"><input type="checkbox" id="s-lip" ${st.linkedinPersonal?'checked':''}><i></i></label></div>
+  <div class="opt"><div><b>LinkedIn company page</b><small>Also post automatic posts there</small></div><label class="sw"><input type="checkbox" id="s-lic" ${st.linkedinCompany?'checked':''}><i></i></label></div>
+  <div class="opt"><div><b>Use news in automatic posts</b><small>About half of text posts react to today's headlines</small></div><label class="sw"><input type="checkbox" id="s-news" ${st.newsInAuto?'checked':''}><i></i></label></div>
+  <label class="l" for="s-off">Time zone</label><select id="s-off">${tz.map(([v,t])=>`<option value="${v}" ${v===st.utcOffsetMinutes?'selected':''}>${t}</option>`).join('')}</select>
+  <button class="pri full" style="margin-top:14px" data-act="savemisc">${I('ok')} Save settings</button></div>
+  <div class="card"><h2>${I('user')} Account</h2><div class="conn"><div class="av">${init(ME.name)}</div><div><b>${esc(ME.name)}</b><small>${esc(ME.email||'')} · ${roleName[ME.role]||ME.role}</small></div></div><button class="dang full" data-act="signout">${I('out')} Sign out</button></div>`}};
+ACT.savemisc=el=>run(el,async()=>{await api('PUT','/api/settings',{linkedinPersonal:$('s-lip').checked,linkedinCompany:$('s-lic').checked,newsInAuto:$('s-news').checked,utcOffsetMinutes:$('s-off').value});await api('POST','/api/auto/replan');toast('Saved','ok')});
+ACT.signout=lock;
+ACT.liconn=el=>run(el,async()=>{const {url}=await api('POST','/api/linkedin/connect');window.open(url,'_blank','noopener')||(location.href=url);toast('Approve on LinkedIn, then come back and refresh','ok')});
+ACT.lidis=el=>{if(confirm('Disconnect LinkedIn?'))run(el,async()=>{await api('POST','/api/linkedin/disconnect');route()})};
+
+/* ---------- Automation ---------- */
+const JS={pending:['Waiting',''],running:['Running','warn'],done:['Posted','ok'],awaiting_approval:['Needs approval','warn'],failed:['Failed','bad'],missed:['Missed','bad'],skipped:['Skipped','warn'],cancelled:['Cancelled','']};
+const TY={text:'Text',image:'Image only',both:'Text + image'};
+VIEWS.auto={async load(){const s=await api('GET','/api/status'),st=s.settings,jobs=s.plan.jobs||[],dr=s.drafts||[];
+  const num=(id,l,v,a,b)=>`<div><label class="l" for="${id}">${l}</label><input id="${id}" type="number" min="${a}" max="${b}" value="${v}"></div>`;
+  return `<div class="card"><div class="opt" style="padding-top:0"><div><b style="font-size:17px">Automatic posting</b><small>${st.enabled?'ON - posts at random times':'OFF'}</small></div><label class="sw"><input type="checkbox" id="s-enabled" ${st.enabled?'checked':''}><i></i></label></div>
+  <label class="l" for="s-mode">When a post is ready</label><select id="s-mode"><option value="auto" ${st.mode==='auto'?'selected':''}>Publish automatically</option><option value="approval" ${st.mode==='approval'?'selected':''}>Save as draft - I approve first</option></select>
+  <label class="l" for="s-type">What to post</label><select id="s-type">${[['mixed','Mixed'],['text','Text only'],['image','Image only'],['both','Text + image']].map(([v,t])=>`<option value="${v}" ${st.postType===v?'selected':''}>${t}</option>`).join('')}</select>
+  <div class="grid2">${num('s-min','Posts/day min',st.minPerDay,1,10)}${num('s-max','Posts/day max',st.maxPerDay,1,10)}${num('s-start','Earliest hour',st.startHour,0,23)}${num('s-end','Latest hour',st.endHour,1,24)}</div>
+  <button class="pri full" style="margin-top:14px" data-act="saveauto">${I('ok')} Save & re-plan</button></div>
+  <div class="card"><h2>${I('stop')} Safety & limits</h2><button class="${st.paused?'pri':'dang'} full" data-act="estop">${I('stop')} ${st.paused?'Resume automation':'Emergency stop'}</button><div class="opt" style="margin-top:8px"><div><b>Post to Facebook</b><small>Switch off to pause Facebook only</small></div><label class="sw"><input type="checkbox" id="s-fbon" ${st.facebookEnabled!==false?'checked':''}><i></i></label></div><div class="grid2">${num('s-dl','Daily limit',st.dailyLimit,1,20)}${num('s-wl','Weekly limit',st.weeklyLimit,1,140)}</div><div class="hint">Limits apply to automatic posts. Save with the button above.</div><button class="dang full" style="margin-top:10px" data-act="cancelpend">${I('x')} Cancel today's pending posts</button></div>
+  <div class="card"><h2>${I('clock')} Today's plan</h2>${jobs.length?jobs.map(j=>{const [l,c]=JS[j.status]||[j.status,''];return `<div class="plan"><span class="tm">${new Date(j.at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span><div style="flex:1"><b>${TY[j.type]||j.type}</b>${j.error?`<small style="color:var(--bad)">${esc(j.error)}</small>`:''}</div><span class="pill ${c}">${l}</span></div>`}).join(''):empty('clock',st.enabled?'No posts planned for today':'Automation is off')}
+  <div class="row" style="margin-top:12px"><button class="sm" data-act="replan">${I('ref')} Re-plan</button></div></div>
+  <div class="card"><h2>${I('zap')} Post now with AI</h2><div class="row"><button class="sm" data-act="now" data-t="text">${I('doc')} Text</button><button class="sm" data-act="now" data-t="image">${I('img')} Image</button><button class="sm" data-act="now" data-t="both">Text + image</button></div><div class="hint">Creates one AI post now (published or saved as draft, following the setting above).</div></div>
+  <div class="card"><h2>${I('ok')} Drafts waiting (${dr.length})</h2>${dr.length?dr.map(d=>`<div style="margin-bottom:14px"><div class="hint" style="margin:0 0 6px">${fmt(d.createdAt)}</div>${d.imageUrl?`<img class="img-prev" style="margin:0 0 8px" src="${esc(d.imageUrl)}" alt="">`:''}${d.type==='image'?'':`<textarea id="dt-${esc(d.id)}">${esc(d.text||'')}</textarea>`}<div class="grid2" style="margin-top:8px"><button class="pri" data-act="dok" data-id="${esc(d.id)}">${I('send')} Approve</button><button class="dang" data-act="dno" data-id="${esc(d.id)}">${I('x')} Reject</button></div></div>`).join(''):'<div class="hint">No drafts</div>'}</div>`}};
+ACT.saveauto=el=>run(el,async()=>{await api('PUT','/api/settings',{enabled:$('s-enabled').checked,mode:$('s-mode').value,postType:$('s-type').value,minPerDay:$('s-min').value,maxPerDay:$('s-max').value,startHour:$('s-start').value,endHour:$('s-end').value,dailyLimit:$('s-dl').value,weeklyLimit:$('s-wl').value,facebookEnabled:$('s-fbon').checked});await api('POST','/api/auto/replan');toast('Saved and re-planned','ok');route()});
+ACT.replan=el=>run(el,async()=>{await api('POST','/api/auto/replan');toast('Re-planned','ok');route()});
+ACT.now=el=>run(el,async()=>{const r=await api('POST','/api/auto/run-now',{type:el.dataset.t});if(r.queued)toast('Draft created - approve it below','ok');else report({facebook:{ok:true},...liRes(r.linkedin)},'published');POSTS=null;route()},'…');
+ACT.dok=el=>run(el,async()=>{const t=$('dt-'+el.dataset.id);const r=await api('POST','/api/drafts/'+encodeURIComponent(el.dataset.id)+'/approve',{text:t?t.value:undefined});report({facebook:{ok:true},...liRes(r.linkedin)},'published');POSTS=null;route()},'Publishing…');
+ACT.dno=el=>run(el,async()=>{await api('DELETE','/api/drafts/'+encodeURIComponent(el.dataset.id));toast('Draft rejected');route()});
+
+/* ---------- News ---------- */
+let NT=[],NEWS_FORCE=false;
+const safeUrl=u=>/^https?:\/\//i.test(u)?u:'#';
+const ntChips=()=>NT.map((t,i)=>`<span class="pill" style="font-size:13px;padding:6px 8px 6px 12px">${esc(t)}<button data-act="ntdel" data-i="${i}" style="background:none;padding:0 4px;min-height:0;color:inherit">${I('x')}</button></span>`).join('')||'<span class="hint">No topics yet</span>';
+const nw=(n,i)=>`<div class="card nw" style="padding:12px"><div style="font-weight:600">${esc(n.title)}</div><div class="bm" style="margin:6px 0 8px"><span>${esc(n.source)}</span><span>· ${ago(n.at)}</span><span class="pill">${esc(n.topic)}</span>${n.isNew?'<span class="pill ok">NEW</span>':''}</div><div class="row"><a class="btn sm" href="${esc(safeUrl(n.link))}" target="_blank" rel="noopener">${I('ext')} Read</a><button class="sm" data-act="newspost" data-i="${i}">${I('ai')} Post about it</button></div></div>`;
+const briefHtml=b=>b?`<p style="margin:0 0 10px">${esc(b.summary)}</p>`+[['Trends','trends'],['Opportunities for us','opportunities'],['Risks to watch','risks']].map(([l,k])=>(b[k]&&b[k].length)?`<b>${l}</b><ul style="margin:4px 0 10px;padding-left:20px">${b[k].map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:'').join('')+(b.postIdeas&&b.postIdeas.length?'<b>Post ideas</b>'+b.postIdeas.map((x,i)=>`<div class="opt"><div>${esc(x)}</div><button class="sm" data-act="ideapost" data-i="${i}">${I('ai')} Write</button></div>`).join(''):'')+`<div class="hint">Updated ${fmt(b.at)}</div>`:'<div class="hint">No analysis yet - it is prepared automatically once a day, or tap the button.</div>';
+VIEWS.news={async load(){const d=await api('GET','/api/news'+(NEWS_FORCE?'?refresh=1':''));NEWS_FORCE=false;VIEWS.news.d=d;NT=[...d.topics];
+ return `<div class="card"><h2>${I('news')} Tracked topics</h2><div class="row" id="ntc">${ntChips()}</div><div class="row" style="margin-top:10px;flex-wrap:nowrap"><input id="ntin" placeholder="Add a topic, e.g. AI in Qatar" maxlength="60"><button class="sm" data-act="ntadd">${I('plus')}</button></div><button class="pri full" style="margin-top:10px" data-act="ntsave">${I('ok')} Save & refresh</button></div>
+ <div class="card"><h2>${I('ai')} Daily news analysis</h2>${briefHtml(d.brief)}<button class="full" style="margin-top:10px" data-act="brief">${I('ref')} ${d.brief?'Re-analyze':"Analyze today's news"}</button></div>
+ <div class="row sp" style="margin:6px 2px 10px"><b>Latest headlines (${d.items.length})</b><button class="sm" data-act="nrefresh">${I('ref')}</button></div>${d.items.map(nw).join('')||empty('news','No headlines. Add topics above.')}`},
+ bind(){const ids=VIEWS.news.d.items.filter(n=>n.isNew).map(n=>n.id);if(ids.length)api('POST','/api/news/seen',{ids}).catch(()=>{})}};
+const draftFrom=(el,topic)=>run(el,async()=>{const d=await api('POST','/api/ai/draft',{topic});LS.set('araa_draft',d.text);location.hash='#create'},'Writing…');
+ACT.newspost=el=>{const n=VIEWS.news.d.items[+el.dataset.i];draftFrom(el,`our short take for business owners on this news: "${n.title}" (${n.source}). Use only facts in the headline, invent no details, and mention the source by name`)};
+ACT.ideapost=el=>draftFrom(el,VIEWS.news.d.brief.postIdeas[+el.dataset.i]);
+ACT.ntadd=()=>{const v=$('ntin').value.trim();if(!v)return;if(NT.length>=8)return toast('Up to 8 topics','err');if(!NT.some(t=>t.toLowerCase()===v.toLowerCase()))NT.push(v);$('ntin').value='';$('ntc').innerHTML=ntChips()};
+ACT.ntdel=el=>{NT.splice(+el.dataset.i,1);$('ntc').innerHTML=ntChips()};
+ACT.ntsave=el=>run(el,async()=>{await api('PUT','/api/settings',{newsTopics:NT});NEWS_FORCE=true;route()});
+ACT.nrefresh=()=>{NEWS_FORCE=true;route()};
+ACT.brief=el=>run(el,async()=>{await api('POST','/api/news/brief');route()},'Analyzing…');
+
+/* ---------- Marketing AI ---------- */
+const TASKS=[['calendar','7-day plan','Focus or topic (optional), e.g. promote our mobile app service'],['ideas','Ideas','What should the ideas be about? (optional)'],['caption','Caption','Paste your draft post here'],['seo','SEO & tags','Topic or page, e.g. web development in Qatar'],['strategy','Strategy','Your goal, e.g. get 10 new leads this month'],['ads','Ad copy','What are we advertising?'],['chat','Ask','Ask any marketing question']];
+let AG={task:'calendar',out:''};
+const aout=()=>{$('aout').innerHTML=AG.out?`<div class="card"><h2>${I('ai')} Result</h2><div class="bt" style="font-size:15px">${esc(AG.out)}</div><div class="row" style="margin-top:12px"><button class="sm" data-act="acopy">${I('doc')} Copy</button><button class="sm pri" data-act="ause">${I('plus')} Use as post</button></div><div class="row" style="margin-top:12px;flex-wrap:nowrap"><input id="afu" placeholder="Follow-up question…"><button class="sm" data-act="afup">${I('send')}</button></div></div>`:''};
+VIEWS.agent={load(){return `<div class="hero"><h2>Marketing AI</h2><p>Content plans, captions, SEO, ads and strategy for your business.</p></div>
+ <div class="card"><div class="chips" id="tk">${TASKS.map(([k,t])=>`<label class="chip"><input type="radio" name="tk" value="${k}" ${k===AG.task?'checked':''}>${t}</label>`).join('')}</div>
+ <textarea id="ain" style="min-height:90px;margin-top:12px"></textarea>
+ <div class="opt"><div><b>Use today's news</b><small>Adds the daily news analysis as context</small></div><label class="sw"><input type="checkbox" id="anews"><i></i></label></div>
+ <button class="pri full" data-act="agrun">${I('ai')} Run</button></div><div id="aout"></div>`},
+ bind(){const set=()=>{AG.task=document.querySelector('#tk input:checked').value;$('ain').placeholder=TASKS.find(t=>t[0]===AG.task)[2]};document.querySelectorAll('#tk input').forEach(i=>i.onchange=set);set();aout()}};
+const agCall=(el,body)=>run(el,async()=>{const r=await api('POST','/api/agent',{...body,useNews:$('anews').checked});AG.out=r.text;aout();$('aout').scrollIntoView({behavior:'smooth'})},'Thinking…');
+ACT.agrun=el=>agCall(el,{task:AG.task,input:$('ain').value});
+ACT.afup=el=>{const v=$('afu').value.trim();if(v)agCall(el,{task:'chat',input:v,prev:AG.out})};
+ACT.acopy=()=>navigator.clipboard.writeText(AG.out).then(()=>toast('Copied','ok'),()=>toast('Could not copy','err'));
+ACT.ause=()=>{LS.set('araa_draft',AG.out);location.hash='#create'};
+
+/* ---------- Emergency stop / cancel ---------- */
+ACT.estop=el=>run(el,async()=>{const s=await api('GET','/api/status');const on=!s.settings.paused;if(on&&!confirm('Stop all automatic posting now?'))return;await api('PUT','/api/settings',{paused:on});toast(on?'Emergency stop ON':'Automation resumed',on?'err':'ok');route()});
+ACT.cancelpend=el=>{if(confirm("Cancel all of today's pending automatic posts?"))run(el,async()=>{const r=await api('POST','/api/auto/cancel');toast(r.cancelled+' cancelled','ok');route()})};
+
+/* ---------- Brand ---------- */
+VIEWS.brand={async load(){const s=await api('GET','/api/status'),b={name:'Araa Softwares',motto:'Empowering the world through intelligent software.',website:'https://araasoftwares.com',services:'web development, mobile apps, AI automation and startup solutions',audience:'small and medium businesses and startups in Qatar and Sri Lanka',tone:'friendly professional',avoid:'',mix:{educational:50,informational:30,promotional:20},...(s.settings.brand||{})};
+  const f=(id,l,v,ta)=>`<label class="l" for="${id}">${l}</label>${ta?`<textarea id="${id}" style="min-height:80px">${esc(v)}</textarea>`:`<input id="${id}" value="${esc(v)}">`}`;
+  const m=(k,l)=>`<div><label class="l" for="m-${k}">${l} %</label><input id="m-${k}" type="number" min="0" max="100" value="${b.mix[k]}"></div>`;
+  return `<div class="card"><h2>${I('star')} Brand identity</h2>${f('b-name','Brand name',b.name)}${f('b-motto','Motto',b.motto)}${f('b-web','Website',b.website)}${f('b-serv','Real services (AI only promotes these)',b.services,1)}${f('b-aud','Target audience',b.audience,1)}${f('b-tone','Tone of voice',b.tone)}${f('b-avoid','Never claim or mention',b.avoid,1)}<div class="hint">The AI never invents customers, testimonials, awards or statistics.</div></div>
+  <div class="card"><h2>${I('list')} Content mix</h2><div class="grid2" style="grid-template-columns:repeat(3,1fr)">${m('educational','Educational')}${m('informational','News')}${m('promotional','Promo')}</div><div class="hint">How often automatic posts teach, inform or promote. They are used as weights.</div></div>
+  <div class="bar"><button class="pri full" data-act="savebrand">${I('ok')} Save brand</button></div>`}};
+ACT.savebrand=el=>run(el,async()=>{const g=id=>$(id).value;await api('PUT','/api/settings',{brand:{name:g('b-name'),motto:g('b-motto'),website:g('b-web'),services:g('b-serv'),audience:g('b-aud'),tone:g('b-tone'),avoid:g('b-avoid'),mix:{educational:g('m-educational'),informational:g('m-informational'),promotional:g('m-promotional')}}});toast('Brand saved','ok')});
+
+/* ---------- Activity ---------- */
+const LOGC={error:'bad',stop:'bad',skipped:'warn',publish:'ok'};
+var AF={page:1,q:'',level:'',from:'',to:''};
+VIEWS.activity={async load(){const d=await api('GET','/api/activity'),u=d.usage;
+  const lq=new URLSearchParams({page:AF.page,pageSize:20});for(const k of['q','level','from','to'])if(AF[k])lq.set(k,AF[k]);
+  const aq=new URLSearchParams();if(AF.from)aq.set('from',AF.from);if(AF.to)aq.set('to',AF.to);
+  const [lp,ac,al]=await Promise.all([api('GET','/api/activity/logs?'+lq),api('GET','/api/ai-usage?'+aq).catch(()=>null),api('GET','/api/alerts').catch(()=>[])]);
+  const money=x=>x==null?'n/a':'$'+Number(x).toFixed(4),tbl=(o)=>Object.entries(o||{}).map(([k,v])=>`<tr><td>${esc(k)}</td><td>${v.calls} (${v.failed} failed)</td><td>${v.inputTokens.toLocaleString()} / ${v.outputTokens.toLocaleString()}</td><td>${money(v.cost)}${v.unpricedCalls?' <small>+'+v.unpricedCalls+' unpriced</small>':''}</td></tr>`).join('')||'<tr><td colspan=4>No data in this range</td></tr>';
+  const openAl=(al||[]).filter(a=>!a.acknowledged).slice(0,5);
+  const alertsCard=openAl.length?`<div class="card" role="alert"><h2>${I('news')} Alerts</h2>${openAl.map(a=>`<div class="row sp" style="margin-bottom:6px"><span><span class="pill ${a.severity==='critical'?'bad':a.severity==='warning'?'warn':''}">${esc(a.severity)}</span> ${esc(a.message)} <small class="hint">${fmt(a.at)}</small></span><button class="sm" data-act="ackalert" data-id="${esc(a.id)}">Dismiss</button></div>`).join('')}</div>`:'';
+  const aiCard=ac?`<div class="card"><h2>${I('ai')} AI cost (estimates)</h2><div class="stats" style="margin:0 0 8px"><div class="stat"><b>${money(ac.periods.today)}</b><span>Today</span></div><div class="stat"><b>${money(ac.periods.week)}</b><span>7 days</span></div><div class="stat"><b>${money(ac.periods.month)}</b><span>30 days</span></div><div class="stat"><b>${money(ac.estimatedCost+ac.reportedCost)}</b><span>Selected range</span></div></div>
+  <div class="hint">Estimated ${money(ac.estimatedCost)} · provider-reported ${money(ac.reportedCost)} · requests ${ac.total.calls||0} (${ac.total.failed||0} failed) · tokens in/out ${(ac.total.inputTokens||0).toLocaleString()} / ${(ac.total.outputTokens||0).toLocaleString()}. Avg per draft ${money(ac.avgCostPerDraft)}, per published ${money(ac.avgCostPerPublished)}, per eligible research item ${money(ac.costPerEligibleResearchItem)}, research→published ${ac.researchToPublicationRate==null?'n/a':(ac.researchToPublicationRate*100).toFixed(1)+'%'}. Rates: pricing.json v${esc(ac.pricingVersion)}. Not an invoice.</div>
+  <div style="overflow-x:auto"><table style="width:100%;font-size:13px;border-collapse:collapse"><caption class="hint" style="text-align:left">By task</caption><tr><th align=left>Task</th><th align=left>Requests</th><th align=left>In / Out tokens</th><th align=left>Cost</th></tr>${tbl(ac.byTask)}</table><table style="width:100%;font-size:13px;border-collapse:collapse;margin-top:8px"><caption class="hint" style="text-align:left">By provider:model</caption>${tbl(ac.byModel)}</table></div></div>`:'';
+  const flt=`<div class="card" role="search" aria-label="Filter activity log"><div class="grid2"><div><label class="l" for="af-q">Search</label><input id="af-q" type="search" value="${esc(AF.q)}" maxlength="80"></div><div><label class="l" for="af-lv">Level</label><select id="af-lv"><option value="">All</option>${['info','warning','error'].map(x=>`<option ${AF.level===x?'selected':''}>${x}</option>`).join('')}</select></div><div><label class="l" for="af-f">From</label><input id="af-f" type="date" value="${esc(AF.from)}"></div><div><label class="l" for="af-t">To</label><input id="af-t" type="date" value="${esc(AF.to)}"></div></div><div class="row" style="margin-top:10px"><button class="pri sm" data-act="alogapply" type="button">Apply</button><button class="sm" data-act="alogexp" type="button">Export log CSV</button><button class="sm" data-act="aiexp" type="button">Export AI usage CSV</button></div><div class="hint">Exports need the super admin role.</div></div>`;
+  const logs=lp.rows.map(l=>`<div class="card" style="padding:12px;margin-bottom:8px"><div class="row sp"><span class="pill ${LOGC[l.type]||''}">${esc(l.type)}</span><small class="hint" style="margin:0">${fmt(l.at)}</small></div><div style="margin-top:6px">${esc(l.message)}</div><small class="hint">${esc(l.by)}${l.status?' · '+esc(l.status):''}${l.code?' · '+esc(l.code):''}</small></div>`).join('')||empty('clock','No matching activity');
+  const pager=`<div class="row sp" style="margin:8px 2px"><button class="sm" data-act="alogprev" ${lp.page<=1?'disabled':''}>Previous</button><span class="hint">Page ${lp.page} of ${lp.pages} · ${lp.total} entries</span><button class="sm" data-act="alognext" ${lp.page>=lp.pages?'disabled':''}>Next</button></div>`;
+  const uc=(l,x)=>`<div class="stat"><b>${x.ai}</b><span>${l}</span><span style="margin-top:2px">${x.tokens.toLocaleString()} tokens · ~$${x.estCost}</span></div>`;
+  return `<div class="stats"><div class="stat"><b>${d.counts.today}/${d.limits.daily}</b><span>${I('send')} Posts today</span></div><div class="stat"><b>${d.counts.week}/${d.limits.weekly}</b><span>${I('send')} This week</span></div>${uc('AI calls today',u.today)}${uc('AI calls · 7 days',u.week)}</div>
+  <div class="hint" style="margin:-6px 2px 14px">Last 30 days: ${u.month.ai} AI calls, ${u.month.image} image searches, ~$${u.month.estCost} (estimate at $${u.rate} per 1M tokens - not a bill).</div>
+  <div class="card"><h2>${I('news')} Status</h2><span class="pill ${d.paused?'bad':'ok'}">Emergency stop: ${d.paused?'ON':'off'}</span> <span class="pill ${d.facebookEnabled?'ok':'warn'}">Facebook automation: ${d.facebookEnabled?'on':'paused'}</span></div>
+  ${d.research?`<div class="card"><h2>${I('ai')} Research</h2><div class="stats" style="margin:0">${[['Topics discovered',d.research.discovered],['Sources stored',d.research.stored],['Sources rejected',d.research.rejected],['Claims verified',d.research.claimsVerified],['Claims need review',d.research.claimsNeedReview],['Duplicates rejected',d.research.duplicates],['Drafts generated',d.research.drafts],['Rejected by quality',d.research.qualityRejected],['Queued for scheduler',d.research.queued],['Published',d.research.published]].map(([l,v])=>`<div class="stat"><b>${v}</b><span>${l}</span></div>`).join('')}</div></div>`:''}
+  ${alertsCard}${aiCard}${flt}<div class="row sp" style="margin:6px 2px 10px"><b>Activity log</b><button class="sm" data-act="repost2" aria-label="Refresh">${I('ref')}</button></div>${logs}${pager}`}};
+ACT.repost2=()=>route();
+ACT.alogapply=()=>{AF={page:1,q:$('af-q').value,level:$('af-lv').value,from:$('af-f').value,to:$('af-t').value};route()};
+ACT.alogprev=()=>{AF.page=Math.max(1,AF.page-1);route()};ACT.alognext=()=>{AF.page++;route()};
+ACT.ackalert=async el=>{await api('POST','/api/alerts/'+el.dataset.id+'/ack');route()};
+async function dl(kind){const q=new URLSearchParams();for(const k of['q','level','from','to'])if(AF[k])q.set(k,AF[k]);const r=await fetch('/api/export/'+kind+'.csv?'+q,{headers:{Authorization:'Bearer '+(await idToken())}});if(!r.ok){toast((await r.json().catch(()=>({}))).error||'Export failed','err');return}const u=URL.createObjectURL(await r.blob()),a=document.createElement('a');a.href=u;a.download='araaposts-'+kind+'.csv';a.click();URL.revokeObjectURL(u)}
+ACT.alogexp=()=>dl('activity');ACT.aiexp=()=>dl('ai-usage');
+
+/* ---------- start ---------- */
+(async()=>{let cfg={firebase:false};try{cfg=await(await fetch('/auth-config')).json()}catch(e){}
+  if(!cfg.firebase){showAuth();$('authBad').classList.remove('hide');return}
+  FB_KEY=cfg.apiKey;$('authOk').classList.remove('hide');
+  FIRST=!!cfg.firstUser;$('firstBox').classList.toggle('hide',!FIRST);$('authGo').textContent=FIRST?'Create super admin account':'Sign in';
+  if(LS.get('araa_rt')){try{await refreshTokens();await enter({});return}catch(e){LS.del('araa_rt');T=null}}
+  showAuth()})();
+</script>
+<script>
+/* ===== Phase 4: analytics, Marketing AI, email, profile, team, notifications ===== */
+const money=n=>Number(n||0).toLocaleString();
+const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const bars=(rows,label,val)=>{const mx=Math.max(1,...rows.map(val));return rows.map(r=>`<div class="row" style="flex-wrap:nowrap;margin:6px 0"><span style="min-width:62px;font-weight:700">${label(r)}</span><div style="flex:1;background:var(--pale);border-radius:99px;height:12px;overflow:hidden"><div style="width:${Math.max(4,val(r)/mx*100)}%;height:100%;background:linear-gradient(90deg,var(--pri),var(--pri2))"></div></div><small class="hint" style="margin:0;min-width:92px;text-align:right">avg ${money(r.avg)} · ${r.n} post${r.n>1?'s':''}</small></div>`).join('')||'<div class="hint">Not enough data yet</div>'};
+const chipsOf=(rows,k)=>rows.length?`<div class="row">${rows.map(r=>`<span class="pill" title="average score ${money(r.avg)} over ${r.n} post(s)">${esc(r[k])} · ${money(r.avg)}</span>`).join('')}</div>`:'<div class="hint">Not enough data yet</div>';
+const hh=h=>String(h).padStart(2,'0')+':00';
+
+/* ---------- Analytics ---------- */
+VIEWS.analytics={async load(){const d=await api('GET','/api/analytics'),i=d.insights||{},t=d.totals,st=d.status||{};
+  const tot=(k,n)=>`<div class="card"><h2>${B(k)} ${n}</h2><div class="es"><div><b>${money(t[k].views)}</b><span>Views</span></div><div><b>${money(t[k].reach)}</b><span>Reach</span></div><div><b>${money(t[k].likes)}</b><span>Likes</span></div></div><div class="es" style="margin-top:8px"><div><b>${money(t[k].comments)}</b><span>Comments</span></div><div><b>${money(t[k].shares)}</b><span>Shares</span></div><div><b>${t[k].posts}</b><span>Posts</span></div></div></div>`;
+  const notes=[st.fbError&&'Facebook: '+st.fbError+' (the Page token needs pages_read_engagement)',st.liError&&'LinkedIn: '+st.liError+' (company page posts only; add r_organization_social to LI_SCOPES and reconnect)'].filter(Boolean);
+  return `<div class="card"><div class="row sp"><div><b>${i.ready?'Posting times follow your best hours':'Collecting data'}</b><div class="hint">${i.ready?'The planner now posts at the hours below.':`${i.measured||0} of 8 measured posts needed before posting times change.`} ${st.lastRun?'Updated '+ago(st.lastRun)+' ago.':''}</div></div>${can('analytics.refresh')?`<button class="pri sm" data-act="anref">${I('ref')} Refresh</button>`:''}</div></div>
+  ${notes.length?`<div class="card" style="background:#fff3dc;color:#7a5200">${notes.map(n=>`<div class="hint" style="color:inherit">${esc(n)}</div>`).join('')}</div>`:''}
+  ${tot('fb','Facebook')}${tot('li','LinkedIn company page')}
+  <div class="card"><h2>${I('clock')} Best hours to post</h2>${bars(i.bestHours||[],r=>hh(r.hour),r=>r.avg)}</div>
+  <div class="card"><h2>${I('clock')} Best days</h2>${bars(i.bestDays||[],r=>DAYS[r.day],r=>r.avg)}</div>
+  <div class="card"><h2>${I('star')} Hashtags that perform</h2>${chipsOf(i.topHashtags||[],'tag')}<h2 style="margin-top:16px">${I('doc')} Keywords that perform</h2>${chipsOf(i.topKeywords||[],'word')}<div class="hint">Score = views + 20 x likes + 40 x comments + 60 x shares. The AI reuses these in new posts.</div></div>
+  <div class="card"><h2>${I('like')} Top posts</h2>${(d.top||[]).filter(p=>p.score>0).map(p=>`<div class="plan"><div class="tm">${money(p.score)}</div><div style="min-width:0"><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc((p.text||'').split('\n')[0])}</div><small>${fmt(p.at)} · ${hh(p.hour)} · ${money((p.fb&&p.fb.views)||0)} views · ${money((p.fb&&p.fb.likes)||0)} likes</small></div></div>`).join('')||'<div class="hint">No measured posts yet</div>'}</div>`}};
+ACT.anref=el=>run(el,async()=>{const r=await api('POST','/api/analytics/refresh');toast(`Updated ${r.updated} post(s)`,'ok');route()});
+
+/* ---------- Marketing AI (autopilot) ---------- */
+VIEWS.ai={async load(){const [o,s]=await Promise.all([api('GET','/api/ai/overview'),api('GET','/api/status')]);const st=s.settings,ro=can('settings.edit')?'':'disabled',run_=can('marketing.run')||can('marketing.run.seo'),cap=o.tokens.cap,pct=cap?Math.min(100,o.tokens.today/cap*100):0,i=o.insights||{},S=o.strategy;
+  const col={ok:'ok',warn:'warn',error:'bad'};
+  return `<div class="hero"><h2>${I('ai')} AraaBot</h2><p>${esc(o.purpose)}</p><div class="row"><span class="pill ${o.state.status==='error'?'bad':o.state.status==='running'?'warn':'ok'}">${esc(o.state.status||'idle')}</span><span class="pill">${o.state.lastCycleAt?'Last cycle '+ago(o.state.lastCycleAt)+' ago':'No cycle yet'}</span></div>
+  ${run_?`<div class="row"><button class="pri" data-act="aicycle">${I('zap')} Run cycle now</button><button data-act="aistrat">${I('ai')} New strategy</button></div>`:''}</div>
+  <div class="card"><div class="opt" style="padding-top:0"><div><b style="font-size:17px">Autopilot</b><small>Every 6 hours: analytics, learn, strategy, re-plan posts. Uses at most one small AI call.</small></div><label class="sw"><input type="checkbox" id="m-auto" ${st.aiAutopilot?'checked':''} ${ro}><i></i></label></div>
+  ${o.state.lastError?`<div class="hint" style="color:var(--bad)">Last error: ${esc(o.state.lastError)}</div>`:''}</div>
+  <div class="card"><h2>${I('star')} Current strategy</h2>${S?`<p style="margin:0 0 8px">${esc(S.summary)}</p><div class="hint">Topics</div><div class="row">${(S.topics||[]).map(t=>`<span class="pill">${esc(t)}</span>`).join('')}</div>${S.avoid?`<div class="hint">Avoid: ${esc(S.avoid)}</div>`:''}${S.nextCheck?`<div class="hint">Next I will check: ${esc(S.nextCheck)}</div>`:''}<div class="hint">Written ${ago(S.at)} ago</div>`:'<div class="hint">No strategy yet. Press "New strategy" or switch Autopilot on.</div>'}</div>
+  <div class="card"><h2>${I('chart')} What it learned</h2><div class="hint">Best hours</div>${chipsOf((i.bestHours||[]).map(h=>({...h,label:hh(h.hour)})),'label')}<div class="hint" style="margin-top:10px">Hashtags</div>${chipsOf((i.topHashtags||[]).slice(0,8),'tag')}<div class="hint" style="margin-top:10px">Keywords</div>${chipsOf((i.topKeywords||[]).slice(0,10),'word')}<a href="#analytics" style="display:block;margin-top:10px">Full analytics</a></div>
+  <div class="card"><h2>${I('zap')} Breaking, urgent and update news</h2>
+  <div class="opt"><div><b>Post news immediately</b><small>Scans fresh headlines; posts only when ${st.breakingMinSources} outlets agree. Harm-related stories go to you, never auto-posted.</small></div><label class="sw"><input type="checkbox" id="m-brk" ${st.breakingEnabled?'checked':''} ${ro}><i></i></label></div>
+  <label class="l" for="m-bmode">When ready</label><select id="m-bmode" ${ro}><option value="auto" ${st.breakingMode==='auto'?'selected':''}>Publish immediately</option><option value="approval" ${st.breakingMode==='approval'?'selected':''}>Save as draft - I approve</option></select>
+  <div class="grid2"><div><label class="l" for="m-bdl">Max per day</label><input id="m-bdl" type="number" min="1" max="10" value="${st.breakingDailyLimit}" ${ro}></div><div><label class="l" for="m-bms">Outlets needed</label><input id="m-bms" type="number" min="1" max="5" value="${st.breakingMinSources}" ${ro}></div><div><label class="l" for="m-bgap">Min gap (min)</label><input id="m-bgap" type="number" min="5" max="720" value="${st.breakingMinGapMin}" ${ro}></div><div><label class="l" for="m-bscan">Scan every (min)</label><input id="m-bscan" type="number" min="5" max="120" value="${st.breakingScanMin}" ${ro}></div></div>
+  <label class="l" for="m-bq">News searches (one per line)</label><textarea id="m-bq" style="min-height:90px" ${ro}>${esc((st.breakingQueries||[]).join('\n'))}</textarea>
+  ${can('automation.control')?`<button class="sm" style="margin-top:10px" data-act="brkscan">${I('news')} Test scan (posts nothing)</button><div id="brkout"></div>`:''}</div>
+  <div class="card"><h2>${I('shield')} Limits and timing</h2><div class="opt"><div><b>Post at best hours</b><small>Needs 8 measured posts</small></div><label class="sw"><input type="checkbox" id="m-best" ${st.useBestTimes?'checked':''} ${ro}><i></i></label></div>
+  <label class="l" for="m-cap">Daily AI token cap (0 = off) - today ${money(o.tokens.today)}${cap?' of '+money(cap):''}</label><input id="m-cap" type="number" min="0" value="${cap}" ${ro}>${cap?`<div style="background:var(--pale);border-radius:99px;height:8px;margin-top:8px;overflow:hidden"><div style="width:${pct}%;height:100%;background:${pct>85?'var(--bad)':'var(--pri2)'}"></div></div>`:''}
+  <label class="l" for="m-aint">Analytics refresh (minutes)</label><input id="m-aint" type="number" min="15" max="1440" value="${st.analyticsIntervalMin}" ${ro}>
+  ${ro?'':`<button class="pri full" style="margin-top:12px" data-act="aisave">${I('ok')} Save</button>`}</div>
+  <div class="card"><h2>${I('link')} AI providers (switches by itself)</h2>${o.providers.length?o.providers.map(p=>`<div style="margin-bottom:10px"><b>${esc(p.id)}</b> <span class="pill ${p.state==='ready'?'ok':'bad'}">${esc(p.state)}</span>${p.models.map(m=>`<div class="hint" style="margin:2px 0">${m.ok?'✔':'⏸'} ${esc(m.model)}${m.ok?'':' - '+esc(m.why)+', retry in '+m.retryInMin+' min'}</div>`).join('')}</div>`).join('')+(can('settings.edit')?`<button class="sm" data-act="aireset">${I('ref')} Retry all now</button>`:''):'<div class="hint">No AI key is set on the server.</div>'}<div class="hint">If a key, model or provider fails, the next one is used automatically and a model that no longer exists is replaced by its newest version.</div></div>
+  <div class="card"><h2>${I('doc')} What the AI did (workflow history)</h2>${o.history.map(h=>`<div class="plan"><div class="tm" style="min-width:64px"><span class="pill ${col[h.status]||''}">${esc(h.step)}</span></div><div style="min-width:0"><div>${esc(h.detail)}</div><small>${fmt(h.at)}</small></div></div>`).join('')||'<div class="hint">Nothing yet</div>'}</div>`}};
+ACT.aicycle=el=>run(el,async()=>{toast('Running cycle...');const r=await api('POST','/api/ai/cycle',{});if(r.busy)toast('Already running');else toast(r.error?'Cycle failed: '+r.error:'Done: '+(r.steps.join(', ')||'nothing to do'),r.error?'err':'ok');route()});
+ACT.aistrat=el=>run(el,async()=>{const r=await api('POST','/api/ai/cycle',{strategy:true});toast(r.strategyError?'Strategy not written: '+r.strategyError:'New strategy written',r.strategyError?'err':'ok');route()});
+ACT.aireset=el=>run(el,async()=>{await api('POST','/api/ai/health/reset');toast('All providers will be tried again','ok');route()});
+ACT.aisave=el=>run(el,async()=>{const g=id=>$(id).value,c=id=>$(id).checked;await api('PUT','/api/settings',{aiAutopilot:c('m-auto'),breakingEnabled:c('m-brk'),breakingMode:g('m-bmode'),breakingDailyLimit:+g('m-bdl'),breakingMinSources:+g('m-bms'),breakingMinGapMin:+g('m-bgap'),breakingScanMin:+g('m-bscan'),breakingQueries:g('m-bq').split('\n').map(x=>x.trim()).filter(Boolean),useBestTimes:c('m-best'),aiDailyTokenCap:+g('m-cap'),analyticsIntervalMin:+g('m-aint')});toast('Saved','ok');route()});
+document.addEventListener('change',e=>{if(e.target.id==='m-auto'&&can('settings.edit'))api('PUT','/api/settings',{aiAutopilot:e.target.checked}).then(()=>toast(e.target.checked?'Autopilot ON':'Autopilot OFF','ok'),x=>{toast(x.message,'err');e.target.checked=!e.target.checked})});
+ACT.brkscan=el=>run(el,async()=>{const r=await api('POST','/api/breaking/scan',{dryRun:true});$('brkout').innerHTML=`<div class="hint">${r.found} confirmed stor${r.found===1?'y':'ies'} found right now</div>`+(r.top||[]).map(t=>`<div class="plan"><div class="tm"><span class="pill ${t.tragedy?'warn':'ok'}">${esc(t.kind)}</span></div><div style="min-width:0">${esc(t.title)}<small>${esc(t.sources.join(', '))}${t.tragedy?' · needs human review':''}</small></div></div>`).join('')});
+
+/* ---------- Email, alerts, subscribers ---------- */
+VIEWS.mail={async load(){const [m,sub,s]=await Promise.all([api('GET','/api/mail/status'),api('GET','/api/mail/subscribers'),api('GET','/api/status')]);const st=s.settings,items=sub.items;
+  return `<div class="card"><h2>${I('send')} EmailJS</h2><div class="row"><span class="pill ${m.configured?'ok':'bad'}">${m.configured?'Connected':'Not set up'}</span><span class="pill">${m.month} of ${m.cap||'no cap'} sent this month</span><span class="pill">${m.subscribers} subscribers</span></div>
+  ${m.configured?'':`<div class="hint">Set EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, EMAILJS_PUBLIC_KEY and EMAILJS_PRIVATE_KEY on the server. In EmailJS turn on Account &gt; Security &gt; "Allow EmailJS API for non-browser applications". Template fields: to_email, subject, title, message, post_url.</div>`}
+  <button class="pri full" style="margin-top:12px" data-act="mailtest" ${m.configured?'':'disabled'}>${I('send')} Send test email</button></div>
+  <div class="card"><h2>${I('bell')} Who gets alerts</h2><label class="l" for="ml-to">Alert emails (post created, edited, deleted, likes, comments, shares)</label><textarea id="ml-to" style="min-height:70px">${esc((st.notifyEmails||[]).join('\n'))}</textarea>
+  <div class="opt"><div><b>Likes, comments and shares</b><small>Grouped into one email every 15 minutes</small></div><label class="sw"><input type="checkbox" id="ml-eng" ${st.notifyOnEngagement?'checked':''}><i></i></label></div>
+  <div class="opt"><div><b>Email subscribers on new posts</b><small>Sent one by one in the background</small></div><label class="sw"><input type="checkbox" id="ml-sub" ${st.mailSubscribers?'checked':''}><i></i></label></div>
+  <label class="l" for="ml-cap">Monthly email cap (EmailJS free plan = 200)</label><input id="ml-cap" type="number" min="0" value="${st.emailMonthlyCap}"><button class="pri full" style="margin-top:12px" data-act="mailsave">${I('ok')} Save</button></div>
+  <div class="card"><h2>${I('users')} Subscribers (${items.filter(x=>x.active).length})</h2><label class="l" for="ml-add">Add emails (comma, space or new line)</label><textarea id="ml-add" style="min-height:60px"></textarea><button class="sm" style="margin-top:8px" data-act="subadd">${I('plus')} Add</button>
+  <div style="margin-top:12px">${items.slice(0,100).map(x=>`<div class="row sp" style="padding:6px 0;border-bottom:1px solid var(--line)"><span style="min-width:0;overflow:hidden;text-overflow:ellipsis">${esc(x.email)} ${x.active?'':'<span class="pill warn">unsubscribed</span>'}</span><button class="sm dang" data-act="subdel" data-key="${esc(x.key)}">${I('del')}</button></div>`).join('')||'<div class="hint">No subscribers yet</div>'}</div>
+  <div class="hint">Website sign-up: send <code>POST ${esc(location.origin)}/subscribe</code> with JSON <code>{"email":"..."}</code>. Every email has an unsubscribe link (set PUBLIC_URL on the server).</div></div>`}};
+ACT.mailtest=el=>run(el,async()=>{await api('POST','/api/mail/test');toast('Test email sent','ok')});
+ACT.mailsave=el=>run(el,async()=>{await api('PUT','/api/settings',{notifyEmails:$('ml-to').value.split(/[\s,;]+/).filter(Boolean),notifyOnEngagement:$('ml-eng').checked,mailSubscribers:$('ml-sub').checked,emailMonthlyCap:+$('ml-cap').value});toast('Saved','ok')});
+ACT.subadd=el=>run(el,async()=>{const r=await api('POST','/api/mail/subscribers',{emails:$('ml-add').value});toast(`${r.added} added${r.invalid?', '+r.invalid+' invalid':''}`,'ok');route()});
+ACT.subdel=el=>{if(confirm('Remove this subscriber?'))run(el,async()=>{await api('DELETE','/api/mail/subscribers/'+encodeURIComponent(el.dataset.key));route()})};
+
+/* ---------- My profile ---------- */
+let PH;
+function shrink(file,size=192){return new Promise((res,rej)=>{const img=new Image(),u=URL.createObjectURL(file);img.onload=()=>{const c=document.createElement('canvas');c.width=c.height=size;const x=c.getContext('2d'),m=Math.min(img.width,img.height);x.drawImage(img,(img.width-m)/2,(img.height-m)/2,m,m,0,0,size,size);URL.revokeObjectURL(u);res(c.toDataURL('image/jpeg',.82))};img.onerror=()=>rej(new Error('Could not read that image'));img.src=u})}
+const lockRow=(l,v)=>`<div class="opt"><div><b>${l}</b><small>${esc(v||'-')}</small></div><span class="pill" title="Only the super admin can change this">${I('lock')} locked</span></div>`;
+VIEWS.profile={async load(){PH=undefined;const u=await api('GET','/api/me');ME={...ME,...u};
+  return `<div class="card" style="text-align:center"><div class="av lg" style="margin:0 auto 10px" id="pav">${avImg(u)}</div><h2 style="justify-content:center;margin:0">${esc(u.name)}</h2><div class="hint">${esc(u.position)} · ${esc(u.empId)}</div>
+  <div class="row" style="justify-content:center;margin-top:10px"><label class="btn sm" style="cursor:pointer">${I('img')} Change photo<input id="pfile" type="file" accept="image/*" class="hide"></label><button class="sm" data-act="pnophoto">Use Araa logo</button></div></div>
+  <div class="card"><h2>${I('lock')} Set by Araa Softwares</h2>${lockRow('Employee ID',u.empId)}${lockRow('Name',u.name)}${lockRow('Position',u.position)}${lockRow('Official email',u.email)}${lockRow('Date of birth',u.dob)}${lockRow('Joined',u.joinDate)}<div class="hint">To change these, ask the super admin.</div></div>
+  <div class="card"><h2>${I('edit')} You can edit</h2><label class="l" for="p-ph">Phone</label><input id="p-ph" type="tel" maxlength="25" value="${esc(u.phone)}"><label class="l" for="p-ad">Address</label><input id="p-ad" maxlength="160" value="${esc(u.address)}"><label class="l" for="p-bio">About me</label><textarea id="p-bio" style="min-height:70px" maxlength="200">${esc(u.bio)}</textarea><button class="pri full" style="margin-top:12px" data-act="psave">${I('ok')} Save profile</button></div>
+  <div class="card"><h2>${I('shield')} Change password</h2><label class="l" for="p-cur">Current password</label><input id="p-cur" type="password" autocomplete="current-password"><label class="l" for="p-new">New password</label><input id="p-new" type="password" autocomplete="new-password" placeholder="8+ characters, letters and numbers"><button class="full" style="margin-top:12px" data-act="ppass">${I('lock')} Change password</button></div>`},
+  bind(){$('pfile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{PH=await shrink(f);$('pav').innerHTML=`<img src="${PH}" alt="">`}catch(x){toast(x.message,'err')}}}};
+ACT.pnophoto=()=>{PH='';$('pav').innerHTML='<img src="logo.png" alt="">';toast('Save to apply','ok')};
+ACT.psave=el=>run(el,async()=>{const b={phone:$('p-ph').value,address:$('p-ad').value,bio:$('p-bio').value};if(PH!==undefined)b.photo=PH;const u=await api('PUT','/api/profile',b);ME={...ME,...u};$('meAv').innerHTML=$('topAv').innerHTML=avImg(ME);PH=undefined;toast('Profile saved','ok')});
+ACT.ppass=el=>run(el,async()=>{const cur=$('p-cur').value,nw=$('p-new').value;if(nw.length<8||!/\d/.test(nw)||!/[A-Za-z]/.test(nw))throw new Error('New password needs 8+ characters with letters and numbers');
+  const d=await fbAuth('accounts:signInWithPassword',{email:ME.email,password:cur,returnSecureToken:true});const r=await fbAuth('accounts:update',{idToken:d.idToken,password:nw,returnSecureToken:true});setTokens(r.idToken,r.refreshToken,r.expiresIn);$('p-cur').value=$('p-new').value='';toast('Password changed','ok')});
+
+/* ---------- Team (admins) ---------- */
+let USERS=null;
+const loadUsers=async()=>{USERS=await api('GET','/api/admins');return USERS};
+const roleOpts=(roles,sel)=>Object.entries(roles).map(([k,v])=>`<option value="${k}" ${k===sel?'selected':''}>${esc(v)}</option>`).join('');
+VIEWS.users={async load(){const d=await loadUsers();const order={super:0,pending:9};const us=[...d.users].sort((a,b)=>((order[a.role]??1)-(order[b.role]??1))||a.name.localeCompare(b.name));
+  return (can('users.manage')?`<a class="btn pri full" href="#adduser" style="margin-bottom:12px">${I('plus')} Add admin</a>`:'')+
+  us.map(u=>`<a class="u" href="#user/${encodeURIComponent(u.uid)}"><div class="av">${avImg(u)}</div><div><b>${esc(u.name)}${u.uid===d.me?' (you)':''}</b><small>${esc(u.empId||'')} · ${esc(u.position||roleName[u.role])}</small></div><span class="pill ${u.role==='super'?'ok':u.role==='pending'?'warn':''}">${roleName[u.role]||u.role}</span></a>`).join('')||empty('users','No team members')}};
+VIEWS.adduser={async load(){if(!can('users.manage'))return empty('shield','Only the super admin can add admins');const d=USERS||await loadUsers();
+  return `<a class="back" href="#users">${I('back')} Team</a><div class="card"><h2>${I('plus')} New admin account</h2><div class="hint">Use the official Araa Softwares details. Employee ID is created automatically.</div>
+  <label class="l" for="a-name">Full name</label><input id="a-name" maxlength="60"><label class="l" for="a-pos">Position (role and permissions)</label><select id="a-pos">${roleOpts(d.roles,'content_creator')}</select>
+  <label class="l" for="a-title">Job title shown on profile (optional)</label><input id="a-title" maxlength="60"><label class="l" for="a-mail">Official email</label><input id="a-mail" type="email" autocomplete="off">
+  <label class="l" for="a-pass">Password</label><input id="a-pass" type="password" autocomplete="new-password" placeholder="8+ characters, letters and numbers"><label class="l" for="a-dob">Date of birth (for password recovery)</label><input id="a-dob" type="date">
+  <div class="grid2"><div><label class="l" for="a-ph">Phone</label><input id="a-ph" type="tel" maxlength="25"></div><div><label class="l" for="a-dep">Department</label><input id="a-dep" maxlength="60"></div></div>
+  <label class="l" for="a-join">Joining date</label><input id="a-join" type="date" value="${new Date().toISOString().slice(0,10)}">
+  <label class="l">Profile photo (optional - the Araa logo is used if empty)</label><input id="a-photo" type="file" accept="image/*"><button class="pri full" style="margin-top:14px" data-act="adduser">${I('ok')} Create account</button></div>`}};
+ACT.adduser=el=>run(el,async()=>{const g=id=>$(id).value.trim(),f=$('a-photo').files[0];const b={name:g('a-name'),role:$('a-pos').value,position:g('a-title'),email:g('a-mail'),password:$('a-pass').value,dob:$('a-dob').value,phone:g('a-ph'),department:g('a-dep'),joinDate:$('a-join').value};if(f)b.photo=await shrink(f);const u=await api('POST','/api/admins',b);toast('Created '+u.name+' ('+u.empId+')','ok');await loadUsers();location.hash='#user/'+encodeURIComponent(u.uid)});
+VIEWS.user={async load(uid){const d=USERS||await loadUsers();const u=d.users.find(x=>x.uid===uid);if(!u)return `<a class="back" href="#users">${I('back')} Team</a>`+empty('users','Not found');const sup=can('users.manage'),own=u.uid===d.me,editable=sup&&u.role!=='super';
+  return `<a class="back" href="#users">${I('back')} Team</a><div class="card" style="text-align:center"><div class="av lg" style="margin:0 auto 10px">${avImg(u)}</div><h2 style="justify-content:center;margin:0">${esc(u.name)}</h2><div class="hint">${esc(u.position||'')} · ${esc(u.empId||'')}</div><div style="margin-top:8px"><span class="pill ${u.role==='super'?'ok':u.role==='pending'?'warn':''}">${I('shield')} ${roleName[u.role]||u.role}</span></div></div>
+  <div class="card"><h2>${I('doc')} Details</h2>${lockRow('Official email',u.email)}${lockRow('Department',u.department)}${(sup||own)?lockRow('Phone',u.phone)+lockRow('Date of birth',u.dob):''}${lockRow('Joined',u.joinDate||(u.createdAt?new Date(u.createdAt).toLocaleDateString():''))}${own?'<a href="#profile" class="btn full" style="margin-top:10px">Edit my profile</a>':''}</div>
+  ${editable?`<div class="card"><h2>${I('edit')} Edit (super admin)</h2><label class="l" for="e-name">Name</label><input id="e-name" value="${esc(u.name)}"><label class="l" for="e-pos">Position / permissions</label><select id="e-pos">${u.role==='pending'?'<option value="pending" selected>No access</option>':''}${roleOpts(d.roles,u.role)}</select><label class="l" for="e-title">Job title</label><input id="e-title" value="${esc(u.position||'')}"><div class="grid2"><div><label class="l" for="e-dep">Department</label><input id="e-dep" value="${esc(u.department||'')}"></div><div><label class="l" for="e-ph">Phone</label><input id="e-ph" value="${esc(u.phone||'')}"></div></div><label class="l" for="e-dob">Date of birth</label><input id="e-dob" type="date" value="${esc(u.dob||'')}">
+  <div class="grid2" style="margin-top:12px"><button class="pri" data-act="uedit" data-uid="${esc(u.uid)}">${I('ok')} Save</button><button class="dang" data-act="unoaccess" data-uid="${esc(u.uid)}" ${u.role==='pending'?'disabled':''}>${I('x')} Remove access</button></div><div class="hint">Employee ID and email never change.</div></div>`:`<div class="hint">${u.role==='super'?'The super admin cannot be changed.':'Only the super admin can edit accounts.'}</div>`}`}};
+ACT.uedit=el=>run(el,async()=>{const g=id=>$(id).value.trim();await api('PUT','/api/admins/'+encodeURIComponent(el.dataset.uid),{name:g('e-name'),role:$('e-pos').value,position:g('e-title'),department:g('e-dep'),phone:g('e-ph'),...(g('e-dob')?{dob:g('e-dob')}:{})});toast('Saved','ok');await loadUsers();route()});
+ACT.unoaccess=el=>{if(confirm('Remove access for this person? Their sign-in stops working in the dashboard.'))run(el,async()=>{await api('PUT','/api/admins/'+encodeURIComponent(el.dataset.uid),{role:'pending'});toast('Access removed','ok');await loadUsers();route()})};
+
+/* ---------- Notifications (bell) ---------- */
+let BELL=null,LASTN=0;
+async function pollBell(first){try{const d=await api('GET','/api/notifications'),el=$('bellN'),n=d.unread;el.textContent=n>99?'99+':n;el.classList.toggle('hide',!n);const x=d.items[0];
+  if(!first&&x&&x.at>LASTN&&x.unread){toast('🔔 '+x.title+(x.detail?'\n'+x.detail.slice(0,90):''),'ok');if('Notification' in window&&Notification.permission==='granted'&&document.hidden)try{new Notification(x.title,{body:x.detail,icon:'logo.png'})}catch(e){}}
+  if(x)LASTN=Math.max(LASTN,x.at)}catch(e){}}
+function startBell(){clearInterval(BELL);LASTN=0;pollBell(true);BELL=setInterval(()=>{if(ME)pollBell(false)},25000);$('bell').onclick=()=>location.hash='#notifications'}
+const NI={create:'send',edit:'edit',delete:'del',like:'like',comment:'cmt',share:'share',breaking:'zap',security:'shield',admin:'users',ai:'ai',system:'bell'};
+VIEWS.notifications={async load(){const d=await api('GET','/api/notifications');
+  return `<div class="row sp" style="margin-bottom:12px"><b>${d.unread} unread</b><div class="row">${'Notification' in window&&Notification.permission==='default'?`<button class="sm" data-act="nperm">${I('bell')} Phone alerts</button>`:''}<button class="sm pri" data-act="nread">${I('ok')} Mark all read</button></div></div>`+
+  (d.items.map(n=>`<div class="card" style="padding:12px;${n.unread?'border-color:var(--pri2)':''}"><div class="row" style="flex-wrap:nowrap;align-items:flex-start"><span class="pl" style="background:${n.level==='warning'?'var(--warn)':'var(--pri)'};flex:none">${I(NI[n.type]||'bell')}</span><div style="min-width:0;flex:1"><b>${esc(n.title)}</b><div style="word-wrap:break-word">${esc(n.detail)}</div><small class="hint">${fmt(n.at)}${n.by&&n.by!=='System'?' · '+esc(n.by):''}${n.url?` · <a href="${esc(n.url)}" target="_blank" rel="noopener">open</a>`:''}</small></div></div></div>`).join('')||empty('bell','No notifications yet'))}};
+ACT.nread=el=>run(el,async()=>{await api('POST','/api/notifications/read');$('bellN').classList.add('hide');route()});
+ACT.nperm=el=>{Notification.requestPermission().then(()=>route())};
+</script><script>
+(function(){function cur(){try{var t=localStorage.getItem("araaTheme");return t==="light"||t==="dark"?t:"system"}catch(e){return"system"}}
+function apply(t){var r=document.documentElement;if(t==="light"||t==="dark")r.dataset.theme=t;else delete r.dataset.theme;
+document.querySelectorAll("[data-theme-set]").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.themeSet===t))})}
+document.addEventListener("click",function(e){var b=e.target.closest("[data-theme-set]");if(!b)return;var t=b.dataset.themeSet;
+try{t==="system"?localStorage.removeItem("araaTheme"):localStorage.setItem("araaTheme",t)}catch(x){}apply(t)});
+apply(cur())})();
+</script>
+</body></html>

@@ -1,0 +1,8 @@
+{
+  "version": "2026-10-example-1",
+  "currency": "USD",
+  "note": "EXAMPLE rates, not authoritative. Check your provider's price page and edit this file (or set PRICING_FILE). Per 1M tokens.",
+  "models": {
+    "groq:openai/gpt-oss-120b": { "inputPerMTok": 0.15, "outputPerMTok": 0.60, "cachedInputPerMTok": 0.075 }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "araaposts",
+  "version": "4.0.0",
+  "type": "module",
+  "description": "Facebook + LinkedIn auto-poster with analytics-driven Marketing AI, breaking-news automation, EmailJS alerts and staff roles",
+  "main": "server.js",
+  "scripts": {
+    "rm_front": "cd ./frontend && rm -rf dist",
+    "rm_server": "cd ./server && rm -rf dist",
+    "all_remove": "npm run rm_front && npm run rm_server",
+    "cp_front": "cp -r ./frontend/dist ./server",
+    "frontend": "cd ./frontend && npm install && npm run build",
+    "build": "npm run all_remove && npm run frontend && npm run cp_front && cd ./server && npm install",
+    "start": "cd ./server && npm run start",
+    "dev": "node --watch  ./server/server.js",
+    "test": "cd ./server && npm run server"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  }
+}
