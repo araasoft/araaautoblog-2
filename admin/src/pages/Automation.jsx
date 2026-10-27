@@ -38,7 +38,7 @@ function Num({ id, label, value, onChange, min, max }) {
 function AutoView({ s, reload }) {
   const { invalidate } = usePosts();
   const st = s.settings;
-  const jobs = s.plan.jobs || [];
+  const jobs = s.plan?.jobs || [];
   const drafts = s.drafts || [];
   const [f, setF] = useState({
     enabled: !!st.enabled,

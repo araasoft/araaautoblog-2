@@ -1,0 +1,8 @@
+{
+  "hosting": {
+    "site": "araa-posts-admin",
+    "public": "dist",
+    "ignore": ["firebase.json", "**/.*"],
+    "rewrites": [{ "source": "**", "destination": "/index.html" }]
+  }
+}

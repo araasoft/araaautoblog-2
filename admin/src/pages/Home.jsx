@@ -29,7 +29,7 @@ function HomeView({ s, list, me, onStop }) {
   const st = s.settings;
   const fbn = list.filter((p) => p.fb).length;
   const lin = list.filter((p) => p.li).length;
-  const nextJob = (s.plan.jobs || []).find((j) => j.status === "pending");
+  const nextJob = (s.plan?.jobs || []).find((j) => j.status === "pending");
   const first = (me.name || "").split(" ")[0];
 
   return (
@@ -52,7 +52,7 @@ function HomeView({ s, list, me, onStop }) {
         <p>{st.paused ? "Automation is STOPPED" : st.enabled ? "Automation is ON" : "Automation is OFF"}</p>
         <p style={{ fontSize: 13 }}>
           Next post: {nextJob && st.enabled && !st.paused ? fmt(nextJob.at) : "-"} · Last successful run:{" "}
-          {s.plan.lastOk ? fmt(s.plan.lastOk) : "-"}
+          {s.plan?.lastOk ? fmt(s.plan.lastOk) : "-"}
         </p>
         <div className="row">
           <Link className="btn pri" to="/create">

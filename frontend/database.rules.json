@@ -1,0 +1,46 @@
+{
+ "rules": {
+  "posts": {
+   ".read": true,
+   ".write": "auth!=null"
+  },
+  "analytics": {
+   ".read": true,
+   ".write": "auth!=null"
+  },
+  "blogs_meta": {
+   ".read": true,
+   ".write": true
+  },
+  "subscribers": {
+   ".read": "auth!=null && auth.token.email==='sahranrock8@gmail.com'",
+   "$k": {
+    ".write": "(auth!=null && auth.token.email==='sahranrock8@gmail.com') || !data.exists() || !newData.exists()",
+    ".validate": "!newData.exists() || (newData.child('email').isString() && newData.child('email').val().length<200)"
+   }
+  },
+  "blog_likes": {
+   ".read": true,
+   "$id": {
+    "$uid": {
+     ".write": "auth!=null && auth.uid===$uid"
+    }
+   }
+  },
+  "blog_favs": {
+   "$uid": {
+    ".read": "auth!=null && auth.uid===$uid",
+    ".write": "auth!=null && auth.uid===$uid"
+   }
+  },
+  "blog_comments": {
+   ".read": true,
+   "$id": {
+    "$cid": {
+     ".write": "auth!=null && ((!data.exists() && newData.child('uid').val()===auth.uid) || data.child('uid').val()===auth.uid || (auth!=null && auth.token.email==='sahranrock8@gmail.com'))",
+     ".validate": "!newData.exists() || (newData.child('text').isString() && newData.child('text').val().length<=500)"
+    }
+   }
+  }
+ }
+}

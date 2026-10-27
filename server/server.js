@@ -44,7 +44,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Public: health check (for uptime pingers) and the dashboard page itself
 app.get("/health", (req, res) => res.json({ ok: true }));
-app.use(express.static(path.join(__dirname, "dist")));
+app.use(express.static(path.join(__dirname, "admin")));
 
 // LinkedIn redirects here after you approve access (state token proves the request came from the dashboard)
 const page = (msg, ok) =>
